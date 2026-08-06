@@ -1,16 +1,17 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import heroImg from "./assets/hero.png";
+import PublicNavbar from "./components/PublicNavbar";
 import "./App.css";
+import HeroSection from "./components/HeroSection";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import Features from "./components/features";
 
 function App() {
-  const [count, setCount] = useState(0);
 
   return (
     <>
-      <div className="hero">
-        <h1 class="text-3xl font-bold underline">Hello world!</h1>
+      <div>
+        <PublicNavbar />
+        <HeroSection />
+        <Features />
       </div>
     </>
   );
