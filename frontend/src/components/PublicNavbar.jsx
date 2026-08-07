@@ -2,7 +2,7 @@ import React from 'react'
 
 const PublicNavbar = () => {
   return (
-    <nav className="w-full border-b border-gray-200 bg-white shadow-sm fixed z-50 top-0">
+    <nav className="w-full border-b border-gray-200 bg-white fixed z-50 top-0 backdrop-blur-md bg-white/50">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
         <a
           href="/"
