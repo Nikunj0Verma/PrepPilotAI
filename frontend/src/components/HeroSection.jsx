@@ -2,9 +2,9 @@ import React from "react"
 
 const DashboardPreview = () => {
   return (
-    <div className="relative mx-auto w-full max-w-xl">
+    <div className="relative mx-auto w-full max-w-xl h-[500px] ">
       <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-blue-400/30 via-indigo-400/20 to-cyan-400/30 blur-3xl" />
-      <div className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white p-4 shadow-2xl shadow-blue-200">
+      <div className="relative mt-20 overflow-hidden rounded-[2rem] border border-white/80 bg-white p-4 shadow-2xl shadow-blue-200">
         <div className="rounded-[1.5rem] bg-slate-950 p-5 text-white">
           <div className="flex items-center justify-between">
             <div>
