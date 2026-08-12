@@ -17,6 +17,7 @@ function Register() {
     const next = !showPass;
     setShowPass(next);
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

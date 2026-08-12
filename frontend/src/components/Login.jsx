@@ -1,12 +1,45 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 function Login() {
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
-  const handleSubmit = (event) => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    navigate("/dashboard");
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+      toast.success("Logged in Successfully...Redirecting!!", {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "light",
+      });
+           localStorage.setItem("token", data.token);
+      setTimeout(() => navigate("/dashboard"), 3000);
+    } catch (err) {
+      toast.error(err.message || "Login failed", {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "light",
+      });
+    }
   };
 
   const showPassword = () => {
@@ -16,7 +49,19 @@ function Login() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 text-slate-900">
+       <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
+        
         <Link
           to="/"
           className="flex items-center gap-3 text-xl font-semibold tracking-tight transition hover:opacity-90"
@@ -37,7 +82,7 @@ function Login() {
         </Link>
       </header>
 
-      <main className="mx-auto grid w-full max-w-7xl gap-10 px-6 pb-16 md:grid-cols-[1.2fr_0.9fr] md:items-center">
+      <main className="mx-auto mt-10 grid w-full max-w-7xl gap-10 px-6 pb-16 md:grid-cols-[1.2fr_0.9fr] md:items-center">
         <section className="rounded-[32px] border border-blue-200/80 bg-white/90 p-10 shadow-2xl shadow-blue-200/20">
           <span className="inline-flex rounded-full bg-blue-100 px-4 py-1 text-sm font-semibold text-blue-700">
             Welcome back!
@@ -84,9 +129,12 @@ function Login() {
                 </label>
                 <input
                   type="email"
+                  name="email"
                   placeholder="you@example.com"
                   required
                   className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
+                  onChange={handleChange}
+                  value={formData.email}
                 />
               </div>
 
@@ -97,8 +145,11 @@ function Login() {
                 <input
                   type={showPass ? "text" : "password"}
                   placeholder="Enter your password"
+                  name="password"
                   required
                   className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
+                  onChange={handleChange}
+                  value={formData.password}
                 />
                 <span className="absolute right-3 top-9  cursor-pointer">
                   <img
