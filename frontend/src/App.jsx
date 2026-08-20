@@ -1,5 +1,5 @@
 import PublicNavbar from "./components/PublicNavbar";
-import { BrowserRouter,Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HeroSection from "./components/HeroSection";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -11,32 +11,47 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SideBar from "./components/SideBar";
+import PrivateNavbar from "./components/privateNavbar";
 
 function App() {
-
   return (
     <>
-     <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <PublicNavbar />
-              <HeroSection />
-              <Features />
-              <About />
-              <Contact />
-            </>
-          }
-        />
-        <Route path="*" element={<h1>404 Not Found</h1>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Register />} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <PublicNavbar />
+                <HeroSection />
+                <Features />
+                <About />
+                <Contact />
+              </>
+            }
+          />
+          <Route path="*" element={<h1>404 Not Found</h1>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <Dashboard />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
     </>
   );
 }
