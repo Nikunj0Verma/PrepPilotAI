@@ -1,6 +1,7 @@
 // Using Node.js `require()`
 const mongoose = require('mongoose');
 const authRouter = require('./routes/authRouter');
+const interviewRouter = require('./routes/interviewRouter');
 const express = require('express');
 const app = express();
 app.use(express.json());
@@ -12,7 +13,8 @@ app.use(cors());
 
 require('dotenv').config();
 app.use("/api/auth", authRouter);
-
+app.use("/api/interview", interviewRouter);
+ 
 mongoose
 .connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB connected"))
