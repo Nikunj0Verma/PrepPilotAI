@@ -9,10 +9,28 @@ const pageTitles = {
   "/progress": "Progress",
 }
 
-const PrivateNavbar = ({
-  userName = "User",
-  userEmail = "user@example.com",
-}) => {
+const PrivateNavbar = () => {
+  const [userName, setUserName] = useState("");
+  
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const token =localStorage.getItem("token");
+          const response = await fetch("http://localhost:5000/api/auth/me", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await response.json();
+          setUserName(data.user);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+  
+      fetchUserData();
+    }, []);
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
@@ -22,13 +40,6 @@ const PrivateNavbar = ({
     window.location.href = "/login"
 }
   const pageTitle = pageTitles[location.pathname] || "Dashboard"
-  const initials = userName
-    .split(" ")
-    .map((name) => name[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase()
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -55,11 +66,11 @@ const PrivateNavbar = ({
           aria-expanded={isOpen}
         >
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 font-bold text-white shadow-md shadow-blue-200">
-            {initials}
+            {userName?.firstName?.charAt(0)?.toUpperCase() || "U"}
           </div>
 
           <span className="hidden text-sm font-semibold text-gray-700 sm:inline">
-            {userName}
+            {userName?.firstName}
           </span>
 
           <span className="text-gray-500">{isOpen ? "▲" : "▼"}</span>
@@ -69,14 +80,14 @@ const PrivateNavbar = ({
           <div className="absolute right-0 mt-3 w-72 rounded-2xl border border-blue-100 bg-white p-4 shadow-xl shadow-blue-100/50">
             <div className="flex items-center gap-3 border-b border-gray-100 pb-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 font-bold text-white">
-                {initials}
+                {userName?.firstName?.charAt(0)?.toUpperCase() || "U"}
               </div>
 
               <div className="min-w-0">
                 <p className="truncate font-semibold text-gray-900">
-                  {userName}
+                  {userName?.firstName} {userName?.lastName}
                 </p>
-                <p className="truncate text-sm text-gray-500">{userEmail}</p>
+                <p className="truncate text-sm text-gray-500">{userName?.email}</p>
               </div>
             </div>
 

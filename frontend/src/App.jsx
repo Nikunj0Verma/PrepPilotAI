@@ -13,6 +13,10 @@ import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SideBar from "./components/SideBar";
 import PrivateNavbar from "./components/privateNavbar";
+import InterviewPrep from "./components/InterviewPrep";
+import ResumeAnalyzer from "./components/ResumeAnalyzer";
+import CompanyPrep from "./components/CompanyPrep";
+import Progress from "./components/Progress";
 
 function App() {
   return (
@@ -44,6 +48,66 @@ function App() {
                   <main className="min-w-0 flex-1">
                     <PrivateNavbar />
                     <Dashboard />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview-prep"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <InterviewPrep />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resume-analyzer"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <ResumeAnalyzer />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/company-prep"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <CompanyPrep />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/progress"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <Progress />
                   </main>
                 </div>
               </ProtectedRoute>

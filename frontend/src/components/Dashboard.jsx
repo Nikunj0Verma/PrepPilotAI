@@ -1,4 +1,5 @@
 import React from "react";
+import {useEffect, useState} from "react";
 
 const quickAccessItems = [
   {
@@ -61,13 +62,34 @@ const recentActivities = [
   },
 ];
 
-const Dashboard = ({ userName = "Nikunj" }) => {
+const Dashboard = () => {
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token =localStorage.getItem("token");
+        const response = await fetch("http://localhost:5000/api/auth/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        setUserName(data.user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
   return (
     <div className="space-y-6 p-4 md:p-8">
       <section className="overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 p-5 text-white shadow-xl shadow-blue-200 md:p-7">
         <p className="text-sm font-medium text-blue-100">Welcome back,</p>
 
-        <h1 className="mt-1 text-2xl font-bold md:text-3xl">{userName}!</h1>
+        <h1 className="mt-1 text-2xl font-bold md:text-3xl">{userName?.firstName}!</h1>
 
         <p className="mt-2 text-sm text-blue-50 md:text-base">
           Ready to improve your interview performance today?
