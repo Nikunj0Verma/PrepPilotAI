@@ -17,6 +17,7 @@ import InterviewPrep from "./components/InterviewPrep";
 import ResumeAnalyzer from "./components/ResumeAnalyzer";
 import CompanyPrep from "./components/CompanyPrep";
 import Progress from "./components/Progress";
+import Interview from "./components/Interview";
 
 function App() {
   return (
@@ -108,6 +109,21 @@ function App() {
                   <main className="min-w-0 flex-1">
                     <PrivateNavbar />
                     <Progress />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview/:id"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <Interview />
                   </main>
                 </div>
               </ProtectedRoute>

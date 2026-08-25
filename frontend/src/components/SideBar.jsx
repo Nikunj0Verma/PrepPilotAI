@@ -50,7 +50,7 @@ const SideBar = () => {
   };
 
   return (
-    <aside className="sticky left-0 top-0 z-40 flex h-screen w-20 shrink-0 flex-col border-r border-blue-100 bg-white/95 px-3 py-5 shadow-xl shadow-blue-100/40 backdrop-blur-md md:w-64 md:px-5">
+    <aside className="sticky left-0 top-0 z-40 flex h-screen w-20 shrink-0 flex-col border-r border-blue-100 bg-white/95 px-3 py-5 shadow-xl backdrop-blur-md md:w-64 md:px-5">
       <NavLink
         to="/"
         onClick={(event) => handleNavigation(event, "/")}

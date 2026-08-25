@@ -27,10 +27,18 @@ const interviewSchema = new mongoose.Schema(
       type: String,
       default: "started",
     },
-    questions: {
-      type: Array,
-      default: [],
+    questions: [
+  {
+    question: {
+      type: String,
+      required: true,
     },
+    answer: {
+      type: String,
+      default: "",
+    },
+  },
+],
 
     answers: {
       type: Array,
