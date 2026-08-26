@@ -18,12 +18,17 @@ import ResumeAnalyzer from "./components/ResumeAnalyzer";
 import CompanyPrep from "./components/CompanyPrep";
 import Progress from "./components/Progress";
 import Interview from "./components/Interview";
+import { useLocation } from "react-router-dom";
 
-function App() {
+function AppRoutes() {
+  const location = useLocation();
+
+  const backgroundLocation =
+    location.state?.backgroundLocation;
+
   return (
     <>
-      <BrowserRouter>
-        <Routes>
+      <Routes location={backgroundLocation || location}>
           <Route
             path="/"
             element={
@@ -130,6 +135,23 @@ function App() {
             }
           />
         </Routes>
+
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path="/interview/:id"
+            element={<Interview />}
+          />
+        </Routes>
+      )}
+    </>
+  );
+}
+function App() {
+  return (
+    <>
+      <BrowserRouter>
+      <AppRoutes/>
         <Footer />
       </BrowserRouter>
     </>

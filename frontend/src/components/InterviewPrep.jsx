@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation  } from "react-router-dom";
 
 const recentInterviews = [
   {
@@ -48,6 +48,7 @@ const interviewTypes = [
 
 const InterviewPrep = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [interviewType, setInterviewType] = useState("technical");
   const [jobRole, setJobRole] = useState("");
@@ -85,7 +86,11 @@ const InterviewPrep = () => {
 
     console.log("Interview created:", data);
 
-    navigate(`/interview/${data.interview._id}`);
+    navigate(`/interview/${data.interview._id}`, {
+  state: {
+    backgroundLocation: location,
+  },
+});
   } catch (error) {
     console.error("Error starting interview:", error);
   }

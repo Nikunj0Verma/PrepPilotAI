@@ -39,7 +39,13 @@ const PrivateNavbar = () => {
     localStorage.removeItem("token");
     window.location.href = "/login"
 }
-  const pageTitle = pageTitles[location.pathname] || "Dashboard"
+
+ const isInterviewPage =
+    location.pathname === "/interview" ||
+    location.pathname.startsWith("/interview/")
+  const pageTitle = isInterviewPage
+    ? "Interview"
+    : pageTitles[location.pathname] || "PrepPilot AI"
 
   useEffect(() => {
     const handleClickOutside = (event) => {

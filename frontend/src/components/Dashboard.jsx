@@ -1,5 +1,4 @@
-import React from "react";
-import {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 const quickAccessItems = [
   {
@@ -35,46 +34,166 @@ const quickAccessItems = [
   },
 ];
 
-const recentActivities = [
-  {
-    title: "AI Mock Interview",
-    detail: "Technical Interview",
-    value: "86%",
-    time: "2 days ago",
-    icon: "fa-solid fa-microphone",
+const getInterviewType = (interview) => {
+  const type = interview.interviewType || interview.type || "Technical";
+
+  return type
+    .toString()
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+};
+
+const getInterviewIcon = (type) => {
+  const normalizedType = type.toLowerCase();
+
+  if (normalizedType.includes("hr")) {
+    return {
+      icon: "fa-solid fa-user-tie",
+      color: "text-indigo-600 bg-indigo-100",
+    };
+  }
+
+  if (
+    normalizedType.includes("behaviour") ||
+    normalizedType.includes("behavior")
+  ) {
+    return {
+      icon: "fa-solid fa-comments",
+      color: "text-cyan-600 bg-cyan-100",
+    };
+  }
+
+  return {
+    icon: "fa-solid fa-code",
     color: "text-blue-600 bg-blue-100",
-  },
-  {
-    title: "Resume Analysis",
-    detail: "Resume score",
-    value: "78%",
-    time: "5 days ago",
-    icon: "fa-solid fa-file-lines",
-    color: "text-indigo-600 bg-indigo-100",
-  },
-  {
-    title: "Company Preparation",
-    detail: "Google",
-    value: "Completed",
-    time: "8 days ago",
-    icon: "fa-solid fa-building",
-    color: "text-cyan-600 bg-cyan-100",
-  },
-];
+  };
+};
+
+const formatTime = (dateValue) => {
+  if (!dateValue) return "Recently";
+
+  const date = new Date(dateValue);
+
+  if (Number.isNaN(date.getTime())) return "Recently";
+
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+
+  if (seconds < 60) return "Just now";
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  }
+
+  const days = Math.floor(hours / 24);
+  if (days < 30) {
+    return `${days} day${days === 1 ? "" : "s"} ago`;
+  }
+
+  const months = Math.floor(days / 30);
+  return `${months} month${months === 1 ? "" : "s"} ago`;
+};
+
+const getScore = (interview) => {
+  const score =
+    interview.score ??
+    interview.overallScore ??
+    interview.finalScore ??
+    interview.result?.score;
+
+  if (score === undefined || score === null || score === "") {
+    return "Completed";
+  }
+
+  const numericScore = Number(score);
+
+  if (Number.isNaN(numericScore)) return score;
+
+  return `${numericScore}%`;
+};
+
+const isStarted = (interview) =>
+  interview.status?.toLowerCase() === "started";
+
+const getTotalQuestions = (interview) => {
+  if (Array.isArray(interview.questions)) {
+    return interview.questions.length;
+  }
+
+  return Number(
+    interview.totalQuestions ||
+      interview.numberOfQuestions ||
+      interview.questionCount ||
+      0
+  );
+};
+
+const getAttemptedQuestions = (interview) => {
+  if (!Array.isArray(interview.questions)) {
+    return 0;
+  }
+
+  return interview.questions.filter(
+    (question) =>
+      typeof question.answer === "string" &&
+      question.answer.trim().length > 0
+  ).length;
+};
 
 const Dashboard = () => {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState(null);
+  const [interviews, setInterviews] = useState([]);
+  const [loadingInterviews, setLoadingInterviews] = useState(true);
+
+  useEffect(() => {
+    const fetchInterviews = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          "http://localhost:5000/api/interview/my-interviews",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch interviews");
+        }
+
+        setInterviews(data.interviews || []);
+      } catch (error) {
+        console.error("Error fetching interviews:", error);
+      } finally {
+        setLoadingInterviews(false);
+      }
+    };
+
+    fetchInterviews();
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token =localStorage.getItem("token");
+        const token = localStorage.getItem("token");
+
         const response = await fetch("http://localhost:5000/api/auth/me", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+
         const data = await response.json();
         setUserName(data.user);
       } catch (error) {
@@ -84,12 +203,15 @@ const Dashboard = () => {
 
     fetchUserData();
   }, []);
+
   return (
     <div className="space-y-6 p-4 md:p-8">
       <section className="overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 p-5 text-white shadow-xl shadow-blue-200 md:p-7">
         <p className="text-sm font-medium text-blue-100">Welcome back,</p>
 
-        <h1 className="mt-1 text-2xl font-bold md:text-3xl">{userName?.firstName}!</h1>
+        <h1 className="mt-1 text-2xl font-bold md:text-3xl">
+          {userName?.firstName || "there"}!
+        </h1>
 
         <p className="mt-2 text-sm text-blue-50 md:text-base">
           Ready to improve your interview performance today?
@@ -151,35 +273,96 @@ const Dashboard = () => {
         </div>
 
         <div className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
-          {recentActivities.map((activity, index) => (
-            <div
-              key={activity.title}
-              className={`flex flex-wrap items-center gap-4 p-5 ${
-                index !== recentActivities.length - 1
-                  ? "border-b border-gray-100"
-                  : ""
-              }`}
-            >
-              <div
-                className={`flex h-11 w-11 items-center justify-center rounded-xl ${activity.color}`}
-              >
-                <i className={activity.icon} />
-              </div>
+          {loadingInterviews && (
+            <div className="p-8 text-center text-gray-500">
+              <i className="fa-solid fa-spinner fa-spin mr-2 text-blue-600" />
+              Loading activities...
+            </div>
+          )}
 
-              <div className="min-w-[180px] flex-1">
-                <h3 className="font-semibold text-gray-900">
-                  {activity.title}
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">{activity.detail}</p>
-              </div>
-
-              <p className="text-sm text-gray-500">{activity.time}</p>
-
-              <p className="min-w-24 text-right font-bold text-blue-600">
-                {activity.value}
+          {!loadingInterviews && interviews.length === 0 && (
+            <div className="p-8 text-center">
+              <i className="fa-solid fa-chart-line text-3xl text-blue-300" />
+              <p className="mt-3 font-semibold text-gray-700">
+                No interview activity yet
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                Start your first mock interview to see your activity here.
               </p>
             </div>
-          ))}
+          )}
+
+          {!loadingInterviews &&
+            interviews.map((interview, index) => {
+              const type = getInterviewType(interview);
+              const appearance = getInterviewIcon(type);
+              const started = isStarted(interview);
+              const totalQuestions = getTotalQuestions(interview);
+              const attemptedQuestions = Math.min(
+                getAttemptedQuestions(interview),
+                totalQuestions
+              );
+
+              const interviewId = interview._id || interview.id;
+
+              return (
+                <div
+                  key={interviewId || index}
+                  className={`flex flex-wrap items-center gap-4 p-5 ${
+                    index !== interviews.length - 1
+                      ? "border-b border-gray-100"
+                      : ""
+                  }`}
+                >
+                  <div
+                    className={`flex h-11 w-11 items-center justify-center rounded-xl ${appearance.color}`}
+                  >
+                    <i className={appearance.icon} />
+                  </div>
+
+                  <div className="min-w-[180px] flex-1">
+                    <h3 className="font-semibold text-gray-900">
+                      AI Mock Interview
+                    </h3>
+
+                    <p className="mt-1 text-sm text-gray-500">
+                      {type}
+                      {interview.jobRole ? ` • ${interview.jobRole}` : ""}
+                    </p>
+                  </div>
+
+                  {started ? (
+                    <div className="flex items-center gap-3">
+                      <span className="rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-600">
+                        {attemptedQuestions}/{totalQuestions} attempted
+                      </span>
+
+                      <a
+                        href={`/interview/${interviewId}`}
+                        className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+                      >
+                        Resume
+                        <i className="fa-solid fa-arrow-right ml-2" />
+                      </a>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-sm text-gray-500">
+                        {formatTime(
+                          interview.createdAt ||
+                            interview.updatedAt ||
+                            interview.date
+                        )}
+                      </p>
+
+                      <p className="min-w-24 text-right font-bold text-blue-600">
+                        {getScore(interview)}
+                      </p>
+                    </>
+                  )}
+                </div>
+              );
+            })}
         </div>
       </section>
     </div>

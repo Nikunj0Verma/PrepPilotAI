@@ -95,6 +95,19 @@ if (questionIndex === interview.questions.length - 1) {
     });
   }
 },
+getMyInterviews: async (req, res) => {
+  try {
+    const interviews = await Interview.find({
+      userId: req.user.userId,
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({ interviews });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+},
 };
 
 module.exports = interviewController;
