@@ -28,26 +28,70 @@ const interviewSchema = new mongoose.Schema(
       default: "started",
     },
     questions: [
-  {
-    question: {
-      type: String,
-      required: true,
-    },
-    answer: {
-      type: String,
-      default: "",
-    },
-  },
-],
+      {
+        question: {
+          type: String,
+          required: true,
+        },
 
-    answers: {
-      type: Array,
-      default: [],
-    },
+        answer: {
+          type: String,
+          default: "",
+        },
 
-    score: {
-      type: Number,
-      default: null,
+        evaluation: {
+          overallScore: {
+            type: Number,
+            default: null,
+          },
+
+          communication: {
+            type: Number,
+            default: null,
+          },
+
+          technicalDepth: {
+            type: Number,
+            default: null,
+          },
+
+          relevance: {
+            type: Number,
+            default: null,
+          },
+
+          feedback: {
+            type: String,
+            default: "",
+          },
+        },
+      },
+    ],
+    evaluation: {
+      overallScore: {
+        type: Number,
+        default: null,
+      },
+
+      performance: {
+        type: String,
+        default: "",
+      },
+
+      summary: {
+        type: String,
+        default: "",
+      },
+
+      strengths: {
+        type: [String],
+        default: [],
+      },
+
+      areasToImprove: {
+        type: [String],
+        default: [],
+      },
     },
   },
   {

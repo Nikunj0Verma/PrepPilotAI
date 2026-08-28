@@ -1,5 +1,6 @@
 // Using Node.js `require()`
 const mongoose = require('mongoose');
+require('dotenv').config();
 const authRouter = require('./routes/authRouter');
 const interviewRouter = require('./routes/interviewRouter');
 const express = require('express');
@@ -11,7 +12,6 @@ app.use(cors());
 // // Using ES6 imports
 // import mongoose from 'mongoose';
 
-require('dotenv').config();
 app.use("/api/auth", authRouter);
 app.use("/api/interview", interviewRouter);
  

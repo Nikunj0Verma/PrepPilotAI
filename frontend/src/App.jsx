@@ -19,6 +19,7 @@ import CompanyPrep from "./components/CompanyPrep";
 import Progress from "./components/Progress";
 import Interview from "./components/Interview";
 import { useLocation } from "react-router-dom";
+import InterviewResult from "./components/InterviewResult";
 
 function AppRoutes() {
   const location = useLocation();
@@ -129,6 +130,21 @@ function AppRoutes() {
                   <main className="min-w-0 flex-1">
                     <PrivateNavbar />
                     <Interview />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview/:id/result"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <InterviewResult />
                   </main>
                 </div>
               </ProtectedRoute>
