@@ -214,7 +214,7 @@ Return ONLY valid JSON using exactly this structure:
   "questionEvaluations": [
     {
       "questionNumber": 1,
-      "overallScore": 0,
+      "overallScore": 0, 
       "communication": 0,
       "technicalDepth": 0,
       "relevance": 0,
@@ -304,6 +304,30 @@ Rules:
       });
     }
   },
+  deleteInterview: async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const interview = await Interview.findOneAndDelete({
+      _id: id,
+      userId: req.user.userId,
+    });
+
+    if (!interview) {
+      return res.status(404).json({
+        message: "Interview not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Interview deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+},
 };
 
 module.exports = interviewController;

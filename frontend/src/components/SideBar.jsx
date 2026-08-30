@@ -52,8 +52,8 @@ const SideBar = () => {
   return (
     <aside className="sticky left-0 top-0 z-40 flex h-screen w-20 shrink-0 flex-col border-r border-blue-100 bg-white/95 px-3 py-5 shadow-xl backdrop-blur-md md:w-64 md:px-5">
       <NavLink
-        to="/"
-        onClick={(event) => handleNavigation(event, "/")}
+        to="/dashboard"
+        onClick={(event) => handleNavigation(event, "/dashboard")}
         className="mb-10 flex items-center justify-center gap-3 md:justify-start"
       >
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 text-xl font-black text-white shadow-lg shadow-blue-200">

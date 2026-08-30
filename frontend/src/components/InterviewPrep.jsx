@@ -1,30 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const recentInterviews = [
-  {
-    type: "Technical Interview",
-    score: "86%",
-    time: "2 days ago",
-    icon: "fa-solid fa-code",
-    iconStyle: "bg-blue-100 text-blue-600",
-  },
-  {
-    type: "HR Interview",
-    score: "78%",
-    time: "5 days ago",
-    icon: "fa-solid fa-user-tie",
-    iconStyle: "bg-indigo-100 text-indigo-600",
-  },
-  {
-    type: "Behavioural Interview",
-    score: "91%",
-    time: "8 days ago",
-    icon: "fa-solid fa-comments",
-    iconStyle: "bg-cyan-100 text-cyan-600",
-  },
-];
-
 const interviewTypes = [
   {
     id: "technical",
@@ -46,10 +22,34 @@ const interviewTypes = [
   },
 ];
 
+const interviewConfig = {
+  technical: {
+    icon: "fa-solid fa-code",
+    iconStyle: "bg-blue-100 text-blue-600",
+    label: "Technical Interview",
+  },
+  hr: {
+    icon: "fa-solid fa-user-tie",
+    iconStyle: "bg-indigo-100 text-indigo-600",
+    label: "HR Interview",
+  },
+  behavioural: {
+    icon: "fa-solid fa-comments",
+    iconStyle: "bg-cyan-100 text-cyan-600",
+    label: "Behavioural Interview",
+  },
+  default: {
+    icon: "fa-solid fa-clipboard-question",
+    iconStyle: "bg-slate-100 text-slate-600",
+    label: "Interview",
+  },
+};
+
 const InterviewPrep = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [recentInterviews, setRecentInterviews] = useState([]);
   const [interviewType, setInterviewType] = useState("technical");
   const [jobRole, setJobRole] = useState("");
   const [experienceLevel, setExperienceLevel] = useState("Entry Level");
@@ -59,11 +59,104 @@ const InterviewPrep = () => {
 
   useEffect(() => {
     document.body.style.overflow = isStarting ? "hidden" : "";
-
     return () => {
       document.body.style.overflow = "";
     };
   }, [isStarting]);
+
+  useEffect(() => {
+    const fetchInterviews = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const response = await fetch(
+          "http://localhost:5000/api/interview/my-interviews",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch interviews");
+        }
+
+        const mappedInterviews = (data.interviews || [])
+          .filter((item) => item && item.interviewType)
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt || b.updatedAt) -
+              new Date(a.createdAt || a.updatedAt)
+          )
+          .slice(0, 3)
+          .map((item) => {
+            const typeKey = (item.interviewType || "default").toLowerCase();
+            const config = interviewConfig[typeKey] || interviewConfig.default;
+
+            const scoreValue =
+              item?.evaluation?.overallScore !== undefined
+                ? Number(item.evaluation.overallScore)
+                : Number(item?.score || 0);
+
+            return {
+              ...item,
+              _id: item._id || `${item.interviewType}-${item.createdAt}`,
+              icon: config.icon,
+              iconStyle: config.iconStyle,
+              label: config.label,
+              score: Number.isFinite(scoreValue) ? scoreValue : 0,
+            };
+          });
+
+        setRecentInterviews(mappedInterviews);
+      } catch (error) {
+        console.error("Error fetching interviews:", error);
+        setRecentInterviews([]);
+      }
+    };
+
+    fetchInterviews();
+  }, []);
+
+  const formatTime = (dateValue) => {
+    if (!dateValue) return "Recently";
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) return "Recently";
+
+    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+
+    if (seconds < 60) return "Just now";
+
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) {
+      return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+    }
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) {
+      return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+    }
+
+    const days = Math.floor(hours / 24);
+    if (days < 30) {
+      return `${days} day${days === 1 ? "" : "s"} ago`;
+    }
+
+    const months = Math.floor(days / 30);
+    return `${months} month${months === 1 ? "" : "s"} ago`;
+  };
+
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -86,22 +179,19 @@ const InterviewPrep = () => {
       setIsStarting(true);
       setStartError("");
 
-      const response = await fetch(
-        "http://localhost:5000/api/interview/start",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            interviewType,
-            jobRole: jobRole.trim(),
-            experienceLevel,
-            numberOfQuestions: Number(numberOfQuestions),
-          }),
+      const response = await fetch("http://localhost:5000/api/interview/start", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify({
+          interviewType,
+          jobRole: jobRole.trim(),
+          experienceLevel,
+          numberOfQuestions: Number(numberOfQuestions),
+        }),
+      });
 
       const data = await response.json();
 
@@ -115,7 +205,6 @@ const InterviewPrep = () => {
         throw new Error("Interview ID was not returned by the server.");
       }
 
-      // Hide the loading screen after Gemini finishes generating questions.
       setIsStarting(false);
 
       navigate(`/interview/${interviewId}`, {
@@ -127,10 +216,9 @@ const InterviewPrep = () => {
       console.error("Error starting interview:", error);
 
       setStartError(
-        error.message || "Unable to generate questions. Please try again.",
+        error.message || "Unable to generate questions. Please try again."
       );
 
-      // Hide the loading screen if the request fails.
       setIsStarting(false);
     }
   };
@@ -290,9 +378,7 @@ const InterviewPrep = () => {
                     id="experienceLevel"
                     disabled={isStarting}
                     value={experienceLevel}
-                    onChange={(event) =>
-                      setExperienceLevel(event.target.value)
-                    }
+                    onChange={(event) => setExperienceLevel(event.target.value)}
                     className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <option>Entry Level</option>
@@ -320,9 +406,7 @@ const InterviewPrep = () => {
                     id="numberOfQuestions"
                     disabled={isStarting}
                     value={numberOfQuestions}
-                    onChange={(event) =>
-                      setNumberOfQuestions(event.target.value)
-                    }
+                    onChange={(event) => setNumberOfQuestions(event.target.value)}
                     className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <option value="5">5 Questions</option>
@@ -339,7 +423,6 @@ const InterviewPrep = () => {
             <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl bg-blue-50 p-5 sm:flex-row">
               <div className="flex items-center gap-3 text-sm text-blue-800">
                 <i className="fa-solid fa-circle-info text-lg text-blue-600" />
-
                 <span>
                   Your AI interview will be personalized to your choices.
                 </span>
@@ -383,39 +466,47 @@ const InterviewPrep = () => {
             </span>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {recentInterviews.map((interview) => (
-              <div
-                key={`${interview.type}-${interview.time}`}
-                className="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-blue-50 hover:shadow-md"
-              >
-                <div className="flex items-center justify-between">
-                  <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-xl text-lg ${interview.iconStyle}`}
-                  >
-                    <i className={interview.icon} />
+          {recentInterviews.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500">
+              No interview history found yet.
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-3">
+              {recentInterviews.map((interview) => (
+                <div
+                  key={interview._id}
+                  className="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-blue-50 hover:shadow-md"
+                >
+                  <div className="flex items-center justify-between">
+                    <div
+                      className={`flex h-11 w-11 items-center justify-center rounded-xl text-lg ${interview.iconStyle}`}
+                    >
+                      <i className={interview.icon} />
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-blue-600">
+                        {interview.score}%
+                      </p>
+                      <p className="text-xs font-medium text-gray-500">Score</p>
+                    </div>
                   </div>
 
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-blue-600">
-                      {interview.score}
-                    </p>
+                  <h3 className="mt-5 font-bold text-gray-900">
+                    {capitalizeFirstLetter(interview.label)}
+                  </h3>
 
-                    <p className="text-xs font-medium text-gray-500">Score</p>
-                  </div>
+                  <p className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+                    <i className="fa-regular fa-clock text-blue-500" />
+                    Attempted{" "}
+                    {formatTime(
+                      interview.createdAt || interview.updatedAt || interview.date
+                    )}
+                  </p>
                 </div>
-
-                <h3 className="mt-5 font-bold text-gray-900">
-                  {interview.type}
-                </h3>
-
-                <p className="mt-2 flex items-center gap-2 text-sm text-gray-500">
-                  <i className="fa-regular fa-clock text-blue-500" />
-                  Attempted {interview.time}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
       </div>
 

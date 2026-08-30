@@ -9,6 +9,7 @@ interviewRouter.get("/:id/result",authMiddleware, inerViewControllers.getResult)
 interviewRouter.post("/:id/evaluate",authMiddleware, inerViewControllers.evaluateInterview);
 interviewRouter.post("/start/:id/answer",authMiddleware, inerViewControllers.submitAnswer);
 interviewRouter.get("/my-interviews",authMiddleware, inerViewControllers.getMyInterviews);
+interviewRouter.delete("/:id",authMiddleware, inerViewControllers.deleteInterview);
 
 
 module.exports = interviewRouter;

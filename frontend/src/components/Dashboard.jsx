@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const quickAccessItems = [
   {
@@ -100,11 +101,7 @@ const formatTime = (dateValue) => {
 };
 
 const getScore = (interview) => {
-  const score =
-    interview.score ??
-    interview.overallScore ??
-    interview.finalScore ??
-    interview.result?.score;
+  const score = interview?.evaluation?.overallScore;
 
   if (score === undefined || score === null || score === "") {
     return "Completed";
@@ -112,13 +109,23 @@ const getScore = (interview) => {
 
   const numericScore = Number(score);
 
-  if (Number.isNaN(numericScore)) return score;
+  if (Number.isNaN(numericScore)) {
+    return score;
+  }
 
-  return `${numericScore}%`;
+  return `${Math.round(numericScore)}/100`;
 };
 
 const isStarted = (interview) =>
-  interview.status?.toLowerCase() === "started";
+  interview.status?.toLowerCase() === "started"
+
+const isCompleted = (interview) => {
+  const status = String(interview?.status || "").toLowerCase();
+
+  return (
+    status === "completed"
+  );
+};
 
 const getTotalQuestions = (interview) => {
   if (Array.isArray(interview.questions)) {
@@ -146,9 +153,12 @@ const getAttemptedQuestions = (interview) => {
 };
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const [userName, setUserName] = useState(null);
   const [interviews, setInterviews] = useState([]);
   const [loadingInterviews, setLoadingInterviews] = useState(true);
+  const [openMenuId, setOpenMenuId] = useState(null);
 
   useEffect(() => {
     const fetchInterviews = async () => {
@@ -203,6 +213,63 @@ const Dashboard = () => {
 
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (!event.target.closest("[data-menu-button]")) {
+        setOpenMenuId(null);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, []);
+
+  const handleViewResult = (interviewId) => {
+    navigate(`/interview/${interviewId}/result`);
+    setOpenMenuId(null);
+  };
+
+  const handleResumeInterview = (interviewId) => {
+    navigate(`/interview/${interviewId}`);
+    setOpenMenuId(null);
+  };
+
+  const handleDeleteInterview = async (id) => {
+  try {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this interview?"
+    );
+
+    if (!confirmed) return;
+
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+      `http://localhost:5000/api/interview/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to delete interview");
+    }
+
+    setInterviews((prev) =>
+      prev.filter((interview) => interview._id !== id)
+    );
+
+  } catch (error) {
+    console.error("Delete interview error:", error);
+    alert(error.message);
+  }
+};
 
   return (
     <div className="space-y-6 p-4 md:p-8">
@@ -294,16 +361,16 @@ const Dashboard = () => {
 
           {!loadingInterviews &&
             interviews.map((interview, index) => {
+              const interviewId = interview._id || interview.id;
               const type = getInterviewType(interview);
               const appearance = getInterviewIcon(type);
               const started = isStarted(interview);
+              const completed = isCompleted(interview);
               const totalQuestions = getTotalQuestions(interview);
               const attemptedQuestions = Math.min(
                 getAttemptedQuestions(interview),
                 totalQuestions
               );
-
-              const interviewId = interview._id || interview.id;
 
               return (
                 <div
@@ -337,13 +404,14 @@ const Dashboard = () => {
                         {attemptedQuestions}/{totalQuestions} attempted
                       </span>
 
-                      <a
-                        href={`/interview/${interviewId}`}
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/interview/${interviewId}`)}
                         className="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
                       >
                         Resume
                         <i className="fa-solid fa-arrow-right ml-2" />
-                      </a>
+                      </button>
                     </div>
                   ) : (
                     <>
@@ -356,10 +424,77 @@ const Dashboard = () => {
                       </p>
 
                       <p className="min-w-24 text-right font-bold text-blue-600">
+                        <span className="text-black">Score: </span>
                         {getScore(interview)}
                       </p>
                     </>
                   )}
+
+                  <div className="relative">
+                    <button
+                      type="button"
+                      data-menu-button
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setOpenMenuId((prev) =>
+                          prev === interviewId ? null : interviewId
+                        );
+                      }}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:border-blue-200 hover:text-blue-600"
+                      aria-label="Interview actions"
+                    >
+                      <i className="fa-solid fa-ellipsis-vertical" />
+                    </button>
+
+                    {openMenuId === interviewId && (
+                      <div
+                        className="absolute right-0 top-11 z-20 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        {completed ? (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => handleViewResult(interviewId)}
+                              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                            >
+                              <i className="fa-solid fa-square-poll-vertical text-blue-500" />
+                              Result
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteInterview(interviewId)}
+                              className="flex w-full items-center gap-3 border-t border-slate-100 px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+                            >
+                              <i className="fa-solid fa-trash-can" />
+                              Delete
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => handleResumeInterview(interviewId)}
+                              className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                            >
+                              <i className="fa-solid fa-play text-green-500" />
+                              Resume
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteInterview(interviewId)}
+                              className="flex w-full items-center gap-3 border-t border-slate-100 px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+                            >
+                              <i className="fa-solid fa-trash-can" />
+                              Delete
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}
