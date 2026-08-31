@@ -127,7 +127,6 @@ const InterviewPrep = () => {
     if (!dateValue) return "Recently";
 
     const date = new Date(dateValue);
-
     if (Number.isNaN(date.getTime())) return "Recently";
 
     const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
@@ -232,33 +231,33 @@ const InterviewPrep = () => {
           isStarting ? "pointer-events-none select-none blur-[1px]" : ""
         }`}
       >
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 p-6 text-white shadow-xl shadow-blue-200 md:p-10">
+        <section className="relative overflow-hidden rounded-[30px] bg-gradient-to-r from-[#0f172a] via-[#1d4ed8] to-[#22d3ee] p-6 text-white shadow-[0_18px_45px_rgba(29,78,216,0.28)] md:p-8">
           <div className="relative z-10 max-w-3xl">
-            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 text-2xl backdrop-blur-sm">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-2xl backdrop-blur-sm ring-1 ring-white/20">
               <i className="fa-solid fa-microphone-lines" />
             </div>
 
-            <p className="text-sm font-semibold uppercase tracking-wider text-blue-100">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-100">
               AI-powered preparation
             </p>
 
-            <h1 className="mt-2 text-3xl font-bold md:text-5xl">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-5xl">
               AI Mock Interview
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-7 text-blue-50 md:text-base">
               Practice realistic interview questions tailored to your goals.
-              Build confidence, improve your answers, and receive intelligent
-              feedback to help you perform your best.
+              Build confidence, improve your answers, and get smart feedback
+              that helps you perform at your best.
             </p>
           </div>
 
           <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-white/10" />
-          <div className="absolute -bottom-32 right-24 h-72 w-72 rounded-full bg-cyan-300/10" />
+          <div className="absolute -bottom-28 right-12 h-72 w-72 rounded-full bg-cyan-300/10" />
         </section>
 
         {startError && (
-          <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-700">
+          <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-700 shadow-sm">
             <i className="fa-solid fa-circle-exclamation" />
             <span>{startError}</span>
           </div>
@@ -267,12 +266,12 @@ const InterviewPrep = () => {
         <form onSubmit={handleSubmit} className="space-y-8">
           <section>
             <div className="mb-5">
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-slate-900">
                 Choose Interview Type
               </h2>
 
-              <p className="mt-1 text-gray-500">
-                Select the type of interview you want to practice.
+              <p className="mt-1 text-sm text-slate-500">
+                Select the interview style you want to practice.
               </p>
             </div>
 
@@ -286,17 +285,17 @@ const InterviewPrep = () => {
                     type="button"
                     disabled={isStarting}
                     onClick={() => setInterviewType(type.id)}
-                    className={`rounded-2xl border p-5 text-left transition-all duration-300 hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60 ${
+                    className={`rounded-[24px] border p-5 text-left transition-all duration-300 hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60 ${
                       isSelected
-                        ? "border-blue-500 bg-blue-50 shadow-lg shadow-blue-100"
-                        : "border-blue-100 bg-white shadow-sm hover:border-blue-300 hover:shadow-lg hover:shadow-blue-100"
+                        ? "border-blue-500 bg-blue-50 shadow-[0_18px_40px_rgba(59,130,246,0.12)]"
+                        : "border-slate-200 bg-white shadow-[0_10px_25px_rgba(15,23,42,0.04)] hover:border-blue-300 hover:shadow-[0_16px_35px_rgba(59,130,246,0.10)]"
                     }`}
                   >
                     <div className="flex items-start justify-between">
                       <div
                         className={`flex h-12 w-12 items-center justify-center rounded-xl text-xl ${
                           isSelected
-                            ? "bg-blue-600 text-white"
+                            ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
                             : "bg-blue-100 text-blue-600"
                         }`}
                       >
@@ -310,15 +309,15 @@ const InterviewPrep = () => {
                             : "border-slate-300 bg-white text-transparent"
                         }`}
                       >
-                        <i className="fa-solid fa-check text-xs" />
+                        <i className="fa-solid fa-check text-[10px]" />
                       </span>
                     </div>
 
-                    <h3 className="mt-4 font-bold text-gray-900">
+                    <h3 className="mt-4 text-lg font-bold text-slate-900">
                       {type.title}
                     </h3>
 
-                    <p className="mt-2 text-sm leading-6 text-gray-500">
+                    <p className="mt-2 text-sm leading-6 text-slate-500">
                       {type.description}
                     </p>
                   </button>
@@ -327,14 +326,15 @@ const InterviewPrep = () => {
             </div>
           </section>
 
-          <section className="rounded-3xl border border-blue-100 bg-white p-6 shadow-sm md:p-8">
+          <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_12px_30px_rgba(15,23,42,0.04)] md:p-8">
             <div className="mb-7">
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-slate-900">
                 Interview Configuration
               </h2>
 
-              <p className="mt-1 text-gray-500">
-                Customize your interview session according to your needs.
+              <p className="mt-1 text-sm text-slate-500">
+                Customize your session based on the role and level you want to
+                practice.
               </p>
             </div>
 
@@ -342,7 +342,7 @@ const InterviewPrep = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="jobRole"
-                  className="block text-sm font-semibold text-gray-700"
+                  className="block text-sm font-semibold text-slate-700"
                 >
                   Job Role
                 </label>
@@ -366,7 +366,7 @@ const InterviewPrep = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="experienceLevel"
-                  className="block text-sm font-semibold text-gray-700"
+                  className="block text-sm font-semibold text-slate-700"
                 >
                   Experience Level
                 </label>
@@ -387,14 +387,14 @@ const InterviewPrep = () => {
                     <option>Lead / Manager</option>
                   </select>
 
-                  <i className="fa-solid fa-chevron-down pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-400" />
+                  <i className="fa-solid fa-chevron-down pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
                 </div>
               </div>
 
               <div className="space-y-2">
                 <label
                   htmlFor="numberOfQuestions"
-                  className="block text-sm font-semibold text-gray-700"
+                  className="block text-sm font-semibold text-slate-700"
                 >
                   Number of Questions
                 </label>
@@ -415,23 +415,23 @@ const InterviewPrep = () => {
                     <option value="20">20 Questions</option>
                   </select>
 
-                  <i className="fa-solid fa-chevron-down pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-400" />
+                  <i className="fa-solid fa-chevron-down pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
                 </div>
               </div>
             </div>
 
-            <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl bg-blue-50 p-5 sm:flex-row">
+            <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-[22px] bg-blue-50 p-5 sm:flex-row">
               <div className="flex items-center gap-3 text-sm text-blue-800">
                 <i className="fa-solid fa-circle-info text-lg text-blue-600" />
                 <span>
-                  Your AI interview will be personalized to your choices.
+                  Your AI interview will be personalized to your selected role.
                 </span>
               </div>
 
               <button
                 type="submit"
                 disabled={isStarting}
-                className="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-blue-600 px-7 py-3 font-semibold text-white shadow-lg shadow-blue-200 transition hover:scale-105 hover:bg-indigo-600 disabled:cursor-not-allowed disabled:scale-100 disabled:bg-blue-400 sm:w-auto"
+                className="inline-flex w-full cursor-pointer items-center justify-center rounded-full bg-blue-600 px-7 py-3 font-semibold text-white shadow-[0_12px_25px_rgba(59,130,246,0.35)] transition hover:scale-[1.02] hover:bg-indigo-600 disabled:cursor-not-allowed disabled:scale-100 disabled:bg-blue-400 sm:w-auto"
               >
                 {isStarting ? (
                   <>
@@ -449,15 +449,15 @@ const InterviewPrep = () => {
           </section>
         </form>
 
-        <section className="rounded-3xl border border-blue-100 bg-white p-6 shadow-sm md:p-8">
+        <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_12px_30px_rgba(15,23,42,0.04)] md:p-8">
           <div className="mb-6 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-2xl font-bold text-slate-900">
                 Recent Interviews
               </h2>
 
-              <p className="mt-1 text-gray-500">
-                Review your previous interview attempts and scores.
+              <p className="mt-1 text-sm text-slate-500">
+                Review your previous attempts and performance.
               </p>
             </div>
 
@@ -467,7 +467,7 @@ const InterviewPrep = () => {
           </div>
 
           {recentInterviews.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500">
+            <div className="rounded-[22px] border border-dashed border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500">
               No interview history found yet.
             </div>
           ) : (
@@ -475,7 +475,7 @@ const InterviewPrep = () => {
               {recentInterviews.map((interview) => (
                 <div
                   key={interview._id}
-                  className="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-blue-50 hover:shadow-md"
+                  className="rounded-[22px] border border-slate-100 bg-slate-50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:bg-blue-50 hover:shadow-md"
                 >
                   <div className="flex items-center justify-between">
                     <div
@@ -488,15 +488,15 @@ const InterviewPrep = () => {
                       <p className="text-2xl font-bold text-blue-600">
                         {interview.score}%
                       </p>
-                      <p className="text-xs font-medium text-gray-500">Score</p>
+                      <p className="text-xs font-medium text-slate-500">Score</p>
                     </div>
                   </div>
 
-                  <h3 className="mt-5 font-bold text-gray-900">
+                  <h3 className="mt-5 text-lg font-bold text-slate-900">
                     {capitalizeFirstLetter(interview.label)}
                   </h3>
 
-                  <p className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+                  <p className="mt-2 flex items-center gap-2 text-sm text-slate-500">
                     <i className="fa-regular fa-clock text-blue-500" />
                     Attempted{" "}
                     {formatTime(
@@ -522,12 +522,10 @@ const GeneratingOverlay = () => (
     aria-label="Generating interview questions"
     className="fixed inset-0 z-[9999] flex cursor-wait items-center justify-center bg-slate-950/85 p-5 backdrop-blur-md"
   >
-    <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#0b1238] p-8 text-center text-white shadow-2xl">
+    <div className="w-full max-w-md rounded-[28px] border border-white/10 bg-[#0b1238] p-8 text-center text-white shadow-2xl">
       <i className="fa-solid fa-spinner fa-spin text-4xl text-cyan-300" />
 
-      <h2 className="mt-6 text-2xl font-extrabold">
-        Preparing Your Interview
-      </h2>
+      <h2 className="mt-6 text-2xl font-extrabold">Preparing Your Interview</h2>
 
       <p className="mt-3 text-sm leading-6 text-slate-400">
         Gemini is generating your personalized interview questions. Please

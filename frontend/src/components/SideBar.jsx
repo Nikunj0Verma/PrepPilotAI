@@ -10,12 +10,12 @@ const menuItems = [
   {
     label: "Interview Prep",
     href: "/interview-prep",
-    icon: <i className="fa-solid fa-podcast" />,
+    icon: <i className="fa-solid fa-microphone-lines" />,
   },
   {
     label: "Resume Analyzer",
     href: "/resume-analyzer",
-    icon: <i className="fa-solid fa-file" />,
+    icon: <i className="fa-solid fa-file-lines" />,
   },
   {
     label: "Company Prep",
@@ -50,20 +50,25 @@ const SideBar = () => {
   };
 
   return (
-    <aside className="sticky left-0 top-0 z-40 flex h-screen w-20 shrink-0 flex-col border-r border-blue-100 bg-white/95 px-3 py-5 shadow-xl backdrop-blur-md md:w-64 md:px-5">
-      <NavLink
-        to="/dashboard"
-        onClick={(event) => handleNavigation(event, "/dashboard")}
-        className="mb-10 flex items-center justify-center gap-3 md:justify-start"
-      >
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 text-xl font-black text-white shadow-lg shadow-blue-200">
-          P
-        </div>
+    <aside className="sticky left-0 top-0 z-40 hidden h-screen w-[250px] shrink-0 flex-col border-r border-slate-800 bg-[#09111d] px-4 py-5 text-slate-100 shadow-[0_0_40px_rgba(15,23,42,0.18)] lg:flex">
+      <div className="mb-8 flex items-center justify-between border-b border-slate-800 pb-5">
+        <NavLink
+          to="/dashboard"
+          onClick={(event) => handleNavigation(event, "/dashboard")}
+          className="flex items-center gap-3"
+        >
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-blue-600 to-indigo-600 text-lg font-black text-white shadow-[0_8px_25px_rgba(59,130,246,0.4)]">
+            P
+          </div>
 
-        <span className="hidden bg-gradient-to-r from-blue-700 to-indigo-700 bg-clip-text text-lg font-bold text-transparent md:inline">
-          PrepPilot AI
-        </span>
-      </NavLink>
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-sky-300">
+              PrepPilot
+            </p>
+            <span className="text-base font-bold text-white">AI</span>
+          </div>
+        </NavLink>
+      </div>
 
       <nav className="flex flex-1 flex-col gap-2">
         {menuItems.map((item) => (
@@ -72,41 +77,45 @@ const SideBar = () => {
             to={item.href}
             onClick={(event) => handleNavigation(event, item.href)}
             className={({ isActive }) =>
-              `flex items-center justify-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-300 md:justify-start ${
+              `group relative flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium transition-all duration-200 ${
                 isActive
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                  : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+                  ? "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-[0_12px_24px_rgba(59,130,246,0.32)]"
+                  : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
               }`
             }
           >
             {({ isActive }) => (
               <>
                 <span
-                  className={`w-6 text-center text-lg ${
-                    isActive ? "text-white" : "text-[#615298]"
+                  className={`flex h-8 w-8 items-center justify-center rounded-xl text-base ${
+                    isActive
+                      ? "bg-white/15 text-white"
+                      : "bg-slate-800 text-white group-hover:bg-slate-700"
                   }`}
                 >
                   {item.icon}
                 </span>
 
-                <span className="hidden md:inline">{item.label}</span>
+                <span className="tracking-wide">{item.label}</span>
               </>
             )}
           </NavLink>
         ))}
       </nav>
 
-      <button
-        type="button"
-        onClick={handleLogout}
-        className="flex cursor-pointer items-center justify-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-red-500 transition-all duration-300 hover:bg-red-50 md:justify-start"
-      >
-        <span className="w-6 text-center text-lg text-[#615298]">
-          <i className="fa-solid fa-arrow-right-from-bracket" />
-        </span>
+      <div className="mt-4 border-t border-slate-800 pt-4">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium text-red-300 transition-all duration-200 hover:bg-red-500/10 hover:text-red-200 cursor-pointer"
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-500/10 text-base text-white">
+            <i className="fa-solid fa-right-from-bracket" />
+          </span>
 
-        <span className="hidden md:inline">Logout</span>
-      </button>
+          <span>Logout</span>
+        </button>
+      </div>
     </aside>
   );
 };

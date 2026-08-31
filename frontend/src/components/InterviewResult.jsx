@@ -11,7 +11,7 @@ const InterviewResult = () => {
   const [interview, setInterview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [expandedQuestion, setExpandedQuestion] = useState(null);
+  const [expandedQuestion, setExpandedQuestion] = useState(0);
 
   useEffect(() => {
     const fetchResult = async () => {
@@ -54,13 +54,13 @@ const InterviewResult = () => {
 
   const performance =
     evaluation.performance ||
-    (score >= 70 ? "Good" : score >= 50 ? "Average" : "Needs Improvement");
+    (score >= 70 ? "Strong" : score >= 50 ? "Average" : "Needs Work");
 
   const performanceColor =
     score >= 70
-      ? "text-green-400"
+      ? "text-emerald-400"
       : score >= 50
-        ? "text-yellow-400"
+        ? "text-amber-400"
         : "text-red-400";
 
   const performanceIcon =
@@ -75,27 +75,23 @@ const InterviewResult = () => {
   };
 
   if (loading) {
-    return (
-      <ResultOverlay>
-        <div className="flex min-h-[500px] items-center justify-center">
-          <i className="fa-solid fa-spinner fa-spin text-3xl text-cyan-400" />
-        </div>
-      </ResultOverlay>
-    );
+    return <ResultLoadingState />;
   }
 
   if (error) {
     return (
       <ResultOverlay>
         <div className="flex min-h-[500px] flex-col items-center justify-center px-5 text-center">
-          <i className="fa-solid fa-circle-exclamation text-3xl text-red-400" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 text-red-400 ring-1 ring-red-500/20">
+            <i className="fa-solid fa-circle-exclamation text-2xl" />
+          </div>
 
           <p className="mt-4 text-red-300">{error}</p>
 
           <button
             type="button"
             onClick={() => navigate("/interview-prep")}
-            className="mt-5 rounded-lg bg-blue-600 px-5 py-2.5 font-semibold transition hover:bg-blue-500"
+            className="mt-5 rounded-xl bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-500"
           >
             Back to Interview Prep
           </button>
@@ -108,72 +104,72 @@ const InterviewResult = () => {
     <>
       <div className="screen-layout">
         <ResultOverlay>
-          <header className="relative border-b border-white/10 px-5 py-5 sm:px-8">
-            <button
-              type="button"
-              onClick={() => navigate("/dashboard")}
-              aria-label="Close interview result"
-              className="absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-sm text-slate-400 transition hover:bg-red-500/20 hover:text-red-300"
-            >
-              <i className="fa-solid fa-xmark" />
-            </button>
+          <header className="border-b border-slate-700/60 bg-[#0c1529] px-4 py-4 sm:px-6">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-sky-400/20 bg-sky-500/10 text-sky-200 shadow-[0_8px_20px_rgba(56,189,248,0.18)]">
+                  <i className="fa-solid fa-microchip text-base" />
+                </div>
 
-            <div className="flex items-center gap-3 pr-12">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400">
-                <i className="fa-solid fa-microphone-lines" />
+                <div className="space-y-1">
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.24em] text-sky-300">
+                    AI-powered prep
+                  </p>
+                  <h1 className="text-2xl font-bold tracking-tight text-slate-100">
+                    Interview Result
+                  </h1>
+                </div>
               </div>
 
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-cyan-300">
-                  AI-powered preparation
-                </p>
-
-                <h1 className="text-xl font-bold">AI Mock Interview</h1>
-              </div>
+              <button
+                type="button"
+                onClick={() => navigate("/dashboard")}
+                aria-label="Close interview result"
+                className="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-600/80 bg-slate-800/70 text-slate-300 transition-all duration-200 hover:bg-red-500/10 hover:text-red-300 hover:border-red-500/30"
+              >
+                <i className="fa-solid fa-xmark text-lg" />
+              </button>
             </div>
-
-            <h2 className="mt-7 text-2xl font-bold sm:text-3xl">
-              Interview Result
-            </h2>
 
             <div className="mt-4 flex flex-wrap gap-2">
               <ResultBadge
                 label="Type"
                 value={interview?.interviewType || "Technical"}
               />
-
               <ResultBadge
                 label="Role"
                 value={interview?.jobRole || "Not specified"}
               />
-
               <ResultBadge
                 label="Level"
                 value={interview?.experienceLevel || "Entry Level"}
               />
-
               <ResultBadge label="Questions" value={questions.length} />
             </div>
           </header>
 
-          <section className="space-y-6 p-5 sm:p-8">
-            <div className="grid gap-5 md:grid-cols-2">
-              <div className="rounded-2xl border border-blue-400/20 bg-[#111747] p-6">
-                <p className="text-sm text-slate-400">Overall Score</p>
-
-                <p className="mt-2 text-6xl font-bold text-cyan-300">
-                  {score}
-                  <span className="text-3xl">/100</span>
+          <section className="space-y-4 p-4 sm:p-5">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-slate-700/80 bg-[#111c2f] p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
+                  Overall Score
                 </p>
+
+                <div className="mt-3 flex items-end gap-2">
+                  <p className="text-5xl font-bold text-sky-300">{score}</p>
+                  <span className="pb-1 text-xl font-medium text-slate-400">/100</span>
+                </div>
               </div>
 
-              <div className="rounded-2xl border border-blue-400/20 bg-[#111747] p-6">
-                <p className="text-sm text-slate-400">Overall Performance</p>
+              <div className="rounded-2xl border border-slate-700/80 bg-[#111c2f] p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
+                  Overall Performance
+                </p>
 
                 <h3
-                  className={`mt-2 flex items-center gap-2 text-3xl font-bold ${performanceColor}`}
+                  className={`mt-3 flex items-center gap-2 text-2xl font-bold ${performanceColor}`}
                 >
-                  <i className={`${performanceIcon} mr-2`} />
+                  <i className={`${performanceIcon}`} />
                   {performance}
                 </h3>
 
@@ -184,11 +180,11 @@ const InterviewResult = () => {
               </div>
             </div>
 
-            <div className="grid gap-5 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
               <ResultSection
                 title="Strengths"
                 icon="fa-solid fa-circle-check"
-                color="text-green-400"
+                color="text-emerald-400"
                 items={
                   Array.isArray(evaluation.strengths)
                     ? evaluation.strengths
@@ -210,16 +206,12 @@ const InterviewResult = () => {
               />
             </div>
 
-            <section className="rounded-2xl border border-blue-400/20 bg-[#111747] p-5 sm:p-6">
-              <h3 className="text-xl font-bold">Question Performance</h3>
+            <section className="rounded-2xl border border-slate-700/80 bg-[#111c2f] p-4">
+              <h3 className="text-lg font-bold text-white">Question Performance</h3>
 
-              <p className="mt-1 text-sm text-slate-400">
-                Click a question to view its detailed feedback.
-              </p>
-
-              <div className="mt-5 space-y-3">
+              <div className="mt-4 space-y-3">
                 {questions.length === 0 ? (
-                  <p className="rounded-xl bg-white/5 p-4 text-sm text-slate-400">
+                  <p className="rounded-xl border border-slate-700/80 bg-[#0b1220] p-3 text-sm text-slate-400">
                     No question results are available.
                   </p>
                 ) : (
@@ -230,13 +222,11 @@ const InterviewResult = () => {
                     const questionScore = getScore(questionEvaluation.overallScore);
 
                     const communication = getScore(
-                      questionEvaluation.communication,
+                      questionEvaluation.communication
                     );
-
                     const technicalDepth = getScore(
-                      questionEvaluation.technicalDepth,
+                      questionEvaluation.technicalDepth
                     );
-
                     const relevance = getScore(questionEvaluation.relevance);
 
                     const feedback =
@@ -246,7 +236,7 @@ const InterviewResult = () => {
                     return (
                       <div
                         key={question._id || index}
-                        className="overflow-hidden rounded-xl border border-white/10 bg-[#080d2d]"
+                        className="overflow-hidden rounded-xl border border-slate-700/80 bg-[#0b1220]"
                       >
                         <button
                           type="button"
@@ -254,9 +244,9 @@ const InterviewResult = () => {
                           onClick={() =>
                             setExpandedQuestion(isExpanded ? null : index)
                           }
-                          className="flex w-full items-center gap-4 p-4 text-left transition hover:bg-white/5"
+                          className="flex w-full items-center gap-3 p-3 text-left transition hover:bg-white/5"
                         >
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-sm font-bold text-cyan-300">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-500/15 text-xs font-bold text-sky-300">
                             {index + 1}
                           </span>
 
@@ -266,7 +256,7 @@ const InterviewResult = () => {
                               "Question unavailable"}
                           </span>
 
-                          <span className="shrink-0 rounded-full bg-cyan-400/10 px-3 py-1.5 text-sm font-bold text-cyan-300">
+                          <span className="shrink-0 rounded-full bg-sky-500/10 px-2.5 py-1 text-xs font-bold text-sky-300">
                             {questionScore}/10
                           </span>
 
@@ -278,7 +268,7 @@ const InterviewResult = () => {
                         </button>
 
                         {isExpanded && (
-                          <div className="border-t border-white/10 p-4 sm:p-5">
+                          <div className="border-t border-slate-700/80 p-4">
                             <div className="grid gap-4 lg:grid-cols-2">
                               <DetailCard
                                 title="Your Answer"
@@ -291,17 +281,15 @@ const InterviewResult = () => {
                               <DetailCard title="AI Feedback" content={feedback} />
                             </div>
 
-                            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                            <div className="mt-4 grid gap-3 sm:grid-cols-3">
                               <ScoreBadge
                                 label="Communication"
                                 score={communication}
                               />
-
                               <ScoreBadge
                                 label="Technical Depth"
                                 score={technicalDepth}
                               />
-
                               <ScoreBadge label="Relevance" score={relevance} />
                             </div>
                           </div>
@@ -317,7 +305,7 @@ const InterviewResult = () => {
               <button
                 type="button"
                 onClick={handlePrint}
-                className="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-6 py-3 font-semibold text-cyan-300 transition hover:bg-cyan-400/20 cursor-pointer"
+                className="rounded-xl border border-sky-500/30 bg-sky-500/10 px-5 py-2.5 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/20"
               >
                 <i className="fa-solid fa-file-pdf mr-2" />
                 Print / Save as PDF
@@ -326,7 +314,7 @@ const InterviewResult = () => {
               <button
                 type="button"
                 onClick={() => navigate("/interview-prep")}
-                className="rounded-lg bg-gradient-to-r from-blue-500 to-violet-600 px-6 py-3 font-semibold transition hover:brightness-110 cursor-pointer"
+                className="rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
               >
                 <i className="fa-solid fa-rotate-right mr-2" />
                 Take Another Interview
@@ -335,7 +323,7 @@ const InterviewResult = () => {
               <button
                 type="button"
                 onClick={() => navigate("/dashboard")}
-                className="rounded-lg border border-white/15 bg-white/5 px-6 py-3 font-semibold text-slate-200 transition hover:bg-white/10 cursor-pointer"
+                className="rounded-xl border border-slate-600/80 bg-slate-800/60 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-slate-700/70"
               >
                 <i className="fa-solid fa-chart-line mr-2" />
                 Dashboard
@@ -347,35 +335,35 @@ const InterviewResult = () => {
 
       <div className="print-layout">
         <div className="print-sheet mx-auto max-w-5xl rounded-2xl border border-slate-200 bg-white p-0 text-slate-900 shadow-none">
-          <header className="print-header print-section border-b border-slate-200 bg-slate-50 p-6">
+          <header className="print-header border-b border-slate-200 bg-slate-50 p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-400 text-xl font-bold text-white">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-sky-600 to-indigo-600 text-xl font-bold text-white">
                   P
                 </div>
 
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-700">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-700">
                     AI-Powered Preparation
                   </p>
-                  <h1 className="print-dark text-2xl font-extrabold">
+                  <h1 className="text-2xl font-extrabold text-slate-900">
                     {WEBSITE_NAME}
                   </h1>
                 </div>
               </div>
 
               <div className="text-right">
-                <p className="print-muted text-xs uppercase tracking-[0.2em]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
                   Result
                 </p>
-                <p className="print-dark text-sm font-semibold">
+                <p className="text-sm font-semibold text-slate-800">
                   {formatDate(interview?.createdAt || new Date().toISOString())}
                 </p>
               </div>
             </div>
 
             <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
-              <h2 className="print-dark text-3xl font-bold">Interview Result</h2>
+              <h2 className="text-3xl font-bold text-slate-900">Interview Result</h2>
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <PrintBadge
@@ -403,16 +391,16 @@ const InterviewResult = () => {
 
           <main className="space-y-6 p-6">
             <section className="grid gap-5 md:grid-cols-2">
-              <div className="print-card rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <p className="print-muted text-sm font-medium">Overall Score</p>
-                <p className="print-score mt-2 text-5xl font-extrabold tracking-tight">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <p className="text-sm font-medium text-slate-500">Overall Score</p>
+                <p className="mt-2 text-5xl font-extrabold tracking-tight text-sky-700">
                   {score}
                   <span className="text-2xl font-semibold text-slate-600">/100</span>
                 </p>
               </div>
 
-              <div className="print-card rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <p className="print-muted text-sm font-medium">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <p className="text-sm font-medium text-slate-500">
                   Overall Performance
                 </p>
                 <h3
@@ -420,14 +408,14 @@ const InterviewResult = () => {
                     score >= 70
                       ? "text-green-600"
                       : score >= 50
-                        ? "text-yellow-600"
+                        ? "text-amber-600"
                         : "text-red-600"
                   }`}
                 >
                   {performance}
                 </h3>
 
-                <p className="print-soft mt-3 text-sm leading-6">
+                <p className="mt-3 text-sm leading-6 text-slate-600">
                   {evaluation.summary ||
                     "Keep practicing to improve your interview performance."}
                 </p>
@@ -460,8 +448,8 @@ const InterviewResult = () => {
               />
             </section>
 
-            <section className="print-section rounded-2xl border border-slate-200 bg-slate-50 p-5">
-              <h3 className="print-dark text-2xl font-bold">
+            <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+              <h3 className="text-2xl font-bold text-slate-900">
                 Question Performances
               </h3>
 
@@ -485,22 +473,22 @@ const InterviewResult = () => {
                     return (
                       <div
                         key={question._id || index}
-                        className="print-card overflow-hidden rounded-2xl border border-slate-200 bg-white"
+                        className="overflow-hidden rounded-2xl border border-slate-200 bg-white"
                       >
                         <div className="flex items-start gap-3 border-b border-slate-200 p-4">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sm font-bold text-sky-700">
                             {index + 1}
                           </span>
 
                           <div className="flex-1">
-                            <p className="print-dark text-base font-semibold leading-7">
+                            <p className="text-base font-semibold leading-7 text-slate-900">
                               {question.question ||
                                 question.text ||
                                 "Question unavailable"}
                             </p>
                           </div>
 
-                          <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-700">
+                          <span className="inline-flex items-center rounded-full bg-sky-100 px-3 py-1 text-sm font-semibold text-sky-700">
                             {questionScore}/10
                           </span>
                         </div>
@@ -551,9 +539,9 @@ const InterviewResult = () => {
             </section>
           </main>
 
-          <footer className="print-footer border-t border-slate-200 bg-slate-50 px-6 py-5 text-center">
-            <p className="print-dark text-lg font-extrabold">{WEBSITE_NAME}</p>
-            <p className="print-muted mt-1 text-sm">{WEBSITE_TAGLINE}</p>
+          <footer className="border-t border-slate-200 bg-slate-50 px-6 py-5 text-center">
+            <p className="text-lg font-extrabold text-slate-900">{WEBSITE_NAME}</p>
+            <p className="mt-1 text-sm text-slate-600">{WEBSITE_TAGLINE}</p>
           </footer>
         </div>
       </div>
@@ -561,15 +549,87 @@ const InterviewResult = () => {
   );
 };
 
+const ResultLoadingState = () => (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm">
+    <div className="rounded-[22px] border border-slate-700/80 bg-[#0d1324] px-8 py-7 text-center text-white shadow-[0_20px_60px_rgba(15,23,42,0.5)]">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sky-500/10 ring-1 ring-sky-500/20">
+        <i className="fa-solid fa-spinner fa-spin text-2xl text-sky-300" />
+      </div>
+
+      <p className="mt-4 text-sm text-slate-300">Loading interview result...</p>
+    </div>
+  </div>
+);
+
+const ResultOverlay = ({ children }) => (
+  <div className="print-container fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 px-3 py-4 backdrop-blur-sm sm:px-6">
+    <div className="flex min-h-full items-center justify-center">
+      <main className="w-full max-w-4xl overflow-hidden rounded-[24px] border border-slate-700/70 bg-[#0d1324] text-white shadow-[0_25px_70px_rgba(15,23,42,0.7)]">
+        {children}
+      </main>
+    </div>
+  </div>
+);
+
+const ResultBadge = ({ label, value }) => (
+  <div className="flex items-center gap-2 rounded-xl border border-slate-600/80 bg-slate-800/50 px-3 py-2 text-xs text-slate-100 shadow-[0_8px_18px_rgba(15,23,42,0.2)]">
+    <span className="text-slate-300">{label}:</span>
+    <span className="font-semibold text-slate-100">{value}</span>
+  </div>
+);
+
+const ResultSection = ({ title, icon, color, items }) => (
+  <div className="rounded-2xl border border-slate-700/80 bg-[#111c2f] p-4">
+    <h3 className="flex items-center gap-2 text-lg font-bold text-white">
+      <i className={`${icon} ${color}`} />
+      {title}
+    </h3>
+
+    <ul className="mt-4 space-y-3">
+      {items.map((item, index) => (
+        <li key={index} className="flex gap-3 text-sm text-slate-300">
+          <i className={`fa-solid fa-check mt-1 ${color}`} />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
+const DetailCard = ({ title, content }) => (
+  <div>
+    <h4 className="font-semibold text-sky-300">{title}</h4>
+    <p className="mt-2 min-h-[100px] rounded-xl border border-slate-700/80 bg-[#0b1220] p-3 text-sm leading-6 text-slate-300">
+      {content}
+    </p>
+  </div>
+);
+
+const ScoreBadge = ({ label, score }) => (
+  <div className="rounded-xl border border-slate-700/80 bg-[#0b1220] p-3">
+    <div className="flex items-center justify-between gap-3">
+      <span className="text-xs text-slate-400">{label}</span>
+      <span className="text-sm font-bold text-sky-300">{score}/10</span>
+    </div>
+
+    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-700">
+      <div
+        className="h-full rounded-full bg-gradient-to-r from-sky-500 to-indigo-500"
+        style={{ width: `${score * 10}%` }}
+      />
+    </div>
+  </div>
+);
+
 const PrintBadge = ({ label, value }) => (
-  <div className="print-badge rounded-lg px-3 py-2 text-xs font-medium">
-    <span className="print-muted">{label}: </span>
-    <span className="print-dark font-semibold">{value}</span>
+  <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
+    <span className="text-slate-500">{label}: </span>
+    <span className="font-semibold text-slate-800">{value}</span>
   </div>
 );
 
 const PrintSection = ({ title, icon, color, items }) => (
-  <div className="print-card rounded-2xl border border-slate-200 bg-slate-50 p-5">
+  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
     <h3 className="flex items-center gap-2 text-xl font-bold text-slate-900">
       <i className={`${icon} ${color}`} />
       {title}
@@ -592,7 +652,7 @@ const PrintSection = ({ title, icon, color, items }) => (
 
 const PrintAnswerCard = ({ title, content }) => (
   <div>
-    <h4 className="font-semibold text-cyan-700">{title}</h4>
+    <h4 className="font-semibold text-sky-700">{title}</h4>
     <p className="mt-2 min-h-[120px] rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
       {content}
     </p>
@@ -603,12 +663,12 @@ const PrintScoreBadge = ({ label, score }) => (
   <div className="rounded-xl border border-slate-200 bg-white p-3">
     <div className="flex items-center justify-between gap-3">
       <span className="text-sm text-slate-500">{label}</span>
-      <span className="font-bold text-blue-700">{score}/10</span>
+      <span className="font-bold text-sky-700">{score}/10</span>
     </div>
 
     <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
       <div
-        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400"
+        className="h-full rounded-full bg-gradient-to-r from-sky-500 to-indigo-500"
         style={{ width: `${(score / 10) * 100}%` }}
       />
     </div>
@@ -624,67 +684,6 @@ const getScore = (value) => {
 
   return Math.max(0, Math.min(10, score));
 };
-
-const ResultOverlay = ({ children }) => (
-  <div className="print-container fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 px-3 py-5 backdrop-blur-sm sm:px-6 md:py-8">
-    <div className="flex min-h-full items-center justify-center">
-      <main className="w-full max-w-5xl overflow-hidden rounded-2xl border border-blue-900/80 bg-[#080d2d] text-white shadow-2xl shadow-slate-950/60">
-        {children}
-      </main>
-    </div>
-  </div>
-);
-
-const ResultBadge = ({ label, value }) => (
-  <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs">
-    <span className="text-slate-500">{label}: </span>
-    <span className="font-semibold text-cyan-200">{value}</span>
-  </div>
-);
-
-const ResultSection = ({ title, icon, color, items }) => (
-  <div className="rounded-2xl border border-blue-400/20 bg-[#111747] p-5 sm:p-6">
-    <h3 className="flex items-center gap-2 text-xl font-bold">
-      <i className={`${icon} ${color}`} />
-      {title}
-    </h3>
-
-    <ul className="mt-4 space-y-3">
-      {items.map((item, index) => (
-        <li key={index} className="flex gap-3 text-sm text-slate-300">
-          <i className={`fa-solid fa-check mt-1 ${color}`} />
-          <span>{item}</span>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
-
-const DetailCard = ({ title, content }) => (
-  <div>
-    <h4 className="font-semibold text-cyan-300">{title}</h4>
-    <p className="mt-2 min-h-24 rounded-lg bg-white/5 p-4 text-sm leading-6 text-slate-300">
-      {content}
-    </p>
-  </div>
-);
-
-const ScoreBadge = ({ label, score }) => (
-  <div className="rounded-lg border border-white/10 bg-white/5 p-3">
-    <div className="flex items-center justify-between gap-3">
-      <span className="text-sm text-slate-400">{label}</span>
-
-      <span className="font-bold text-cyan-300">{score}/10</span>
-    </div>
-
-    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-700">
-      <div
-        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400"
-        style={{ width: `${score * 10}%` }}
-      />
-    </div>
-  </div>
-);
 
 const formatDate = (value) => {
   const date = new Date(value);
