@@ -36,29 +36,6 @@ const quickAccessItems = [
   },
 ];
 
-const statCards = [
-  {
-    label: "Interviews",
-    value: "12",
-    trend: "+3 this week",
-    icon: "fa-solid fa-briefcase",
-    color: "bg-sky-100 text-sky-600",
-  },
-  {
-    label: "Avg Score",
-    value: "84%",
-    trend: "+7% from last month",
-    icon: "fa-solid fa-chart-column",
-    color: "bg-violet-100 text-violet-600",
-  },
-  {
-    label: "Streak",
-    value: "6 days",
-    trend: "Keep it up",
-    icon: "fa-solid fa-fire",
-    color: "bg-amber-100 text-amber-600",
-  },
-];
 
 const getInterviewType = (interview) => {
   const type = interview.interviewType || interview.type || "Technical";
@@ -213,6 +190,30 @@ const Dashboard = () => {
 
     fetchInterviews();
   }, []);
+
+  const statCards = [
+  {
+    label: "Interviews",
+    value: `${interviews.length}`,
+    trend: `${interviews.length > 0 ? `${interviews.filter(isCompleted).length} completed` : "No interviews yet"}`,
+    icon: "fa-solid fa-briefcase",
+    color: "bg-sky-100 text-sky-600",
+  },
+  {
+    label: "Avg Score",
+    value: `${interviews.length > 0 ? `${Math.round(interviews.reduce((sum, interview) => sum + (interview.evaluation?.overallScore || 0), 0) / interviews.length)}%` : "N/A"}`,
+    trend: `${interviews.length > 0 ? "Keep improving" : "Start your first interview!"}`,
+    icon: "fa-solid fa-chart-column",
+    color: "bg-violet-100 text-violet-600",
+  },
+  {
+    label: "Streak",
+    value: `${interviews.length > 0 ? `${interviews.filter(isCompleted).length} days` : "0 days"}`,
+    trend: `${interviews.length > 0 ? "Keep it up" : "Start your streak!"}`,
+    icon: "fa-solid fa-fire",
+    color: "bg-amber-100 text-amber-600",
+  },
+];
 
   useEffect(() => {
     const fetchUserData = async () => {

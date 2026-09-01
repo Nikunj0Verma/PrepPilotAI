@@ -1,6 +1,5 @@
 import React from "react";
 
-
 const HeroSection = () => {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[#f8fbff] via-white to-[#eef2ff] py-20 lg:py-28">
@@ -61,8 +60,19 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <div className="w-full">
-          <img className="rounded-4xl border-1" src="images/image.png" alt="" />
+        <div className="relative mx-auto w-full max-w-[740px]">
+          <div className="absolute -left-6 top-10 h-28 w-28 rounded-full bg-[#7C3AED]/10 blur-3xl" />
+          <div className="absolute -right-4 bottom-6 h-32 w-32 rounded-full bg-[#2563EB]/10 blur-3xl" />
+
+          <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-3 shadow-[0_30px_80px_rgba(15,23,42,0.12)]">
+            <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-100 p-2">
+              <img
+                className="h-[300px] w-[740px] rounded-[1.2rem] "
+                src="images/image.png"
+                alt="PrepPilot AI interview preparation dashboard preview"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
