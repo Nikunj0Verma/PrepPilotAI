@@ -117,12 +117,11 @@ const Interview = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     const form = event.currentTarget;
     const answer = form.elements.answer.value.trim();
 
-    if (!answer || submitting || !questions[currentQuestion]) {
-      return;
-    }
+    if (!answer || submitting || !questions[currentQuestion]) return;
 
     try {
       setSubmitting(true);
@@ -183,7 +182,9 @@ const Interview = () => {
       const evaluationData = await evaluationResponse.json();
 
       if (!evaluationResponse.ok) {
-        throw new Error(evaluationData.message || "Failed to evaluate interview");
+        throw new Error(
+          evaluationData.message || "Failed to evaluate interview"
+        );
       }
 
       setInterview(evaluationData.interview || interview);
@@ -204,25 +205,25 @@ const Interview = () => {
     <>
       <div
         aria-busy={submitting}
-        className={`fixed inset-0 z-50 overflow-y-auto bg-slate-950/75 px-3 py-5 backdrop-blur-sm sm:px-6 md:py-8 ${
+        className={`fixed inset-0 z-50 overflow-y-auto bg-slate-950/75 px-3 py-3 backdrop-blur-sm sm:px-6 md:py-4 ${
           submitting ? "pointer-events-none select-none" : ""
         }`}
       >
         <div className="flex min-h-full items-center justify-center">
-          <main className="relative w-full max-w-5xl overflow-hidden rounded-[28px] border border-slate-700/70 bg-[#0d1324] text-slate-100 shadow-[0_30px_80px_rgba(15,23,42,0.7)]">
-            <header className="border-b border-slate-700/60 bg-gradient-to-r from-[#101827] via-[#121d31] to-[#0d1426] px-5 py-5 sm:px-7">
+          <main className="relative w-full max-w-5xl overflow-hidden rounded-[24px] border border-slate-700/70 bg-[#0d1324] text-slate-100 shadow-[0_30px_80px_rgba(15,23,42,0.7)]">
+            <header className="border-b border-slate-700/60 bg-gradient-to-r from-[#101827] via-[#121d31] to-[#0d1426] px-5 py-4 sm:px-6">
               <button
                 type="button"
                 onClick={handleClose}
                 disabled={submitting}
                 aria-label="Close interview"
-                className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-xl border border-slate-600/80 bg-slate-800/70 text-slate-300 transition hover:bg-red-500/10 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-40"
+                className="absolute right-5 top-4 flex h-9 w-9 items-center justify-center rounded-xl border border-slate-600/80 bg-slate-800/70 text-slate-300 transition hover:bg-red-500/10 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <i className="fa-solid fa-xmark text-sm" />
               </button>
 
               <div className="flex items-center gap-3 pr-12">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-700 to-slate-900 text-slate-100 ring-1 ring-slate-600/80">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-700 to-slate-900 text-slate-100 ring-1 ring-slate-600/80">
                   <i className="fa-solid fa-microphone-lines text-base" />
                 </div>
 
@@ -236,7 +237,7 @@ const Interview = () => {
                 </div>
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
                 <InfoBadge
                   icon="fa-solid fa-layer-group"
                   label="Type"
@@ -255,9 +256,9 @@ const Interview = () => {
               </div>
             </header>
 
-            <section className="p-4 sm:p-6 md:p-8">
+            <section className="p-4 sm:p-5 md:p-6">
               {error && (
-                <div className="mb-5 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                <div className="mb-4 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                   {error}
                 </div>
               )}
@@ -268,8 +269,8 @@ const Interview = () => {
 
               {totalQuestions > 0 && !isComplete && (
                 <>
-                  <div className="mb-6 rounded-2xl border border-slate-700/70 bg-[#111c2f] p-4 shadow-inner shadow-slate-950/40">
-                    <div className="mb-3 flex items-center justify-between text-[11px] font-medium text-slate-300">
+                  <div className="mb-4 rounded-2xl border border-slate-700/70 bg-[#111c2f] p-4 shadow-inner shadow-slate-950/40">
+                    <div className="mb-2 flex items-center justify-between text-[11px] font-medium text-slate-300">
                       <span>
                         Question {currentQuestion + 1} of {totalQuestions}
                       </span>
@@ -278,7 +279,7 @@ const Interview = () => {
                       </span>
                     </div>
 
-                    <div className="h-2.5 overflow-hidden rounded-full bg-slate-700">
+                    <div className="h-2 overflow-hidden rounded-full bg-slate-700">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-sky-500 via-indigo-500 to-violet-500 transition-all duration-500"
                         style={{ width: `${progress}%` }}
@@ -286,9 +287,9 @@ const Interview = () => {
                     </div>
                   </div>
 
-                  <div className="rounded-[24px] border border-slate-700/70 bg-gradient-to-br from-[#121c2d] via-[#101a2f] to-[#0b1223] p-5 sm:p-7 shadow-[0_20px_45px_rgba(15,23,42,0.35)]">
-                    <div className="mb-6 flex items-start gap-4">
-                      <div className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky-500/10 text-xl text-sky-300 ring-1 ring-sky-500/20">
+                  <div className="rounded-[22px] border border-slate-700/70 bg-gradient-to-br from-[#121c2d] via-[#101a2f] to-[#0b1223] p-4 shadow-[0_20px_45px_rgba(15,23,42,0.35)] sm:p-6">
+                    <div className="mb-4 flex items-start gap-4">
+                      <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky-500/10 text-xl text-sky-300 ring-1 ring-sky-500/20">
                         <i className="fa-solid fa-robot" />
                       </div>
 
@@ -296,7 +297,7 @@ const Interview = () => {
                         <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-300">
                           AI Interviewer
                         </p>
-                        <h2 className="mt-2 text-xl font-semibold leading-7 text-slate-100 sm:text-2xl">
+                        <h2 className="mt-1 text-xl font-semibold leading-7 text-slate-100 sm:text-2xl">
                           {questions[currentQuestion]?.question}
                         </h2>
                       </div>
@@ -317,12 +318,12 @@ const Interview = () => {
                         name="answer"
                         defaultValue={questions[currentQuestion]?.answer || ""}
                         placeholder="Type your answer here..."
-                        rows={7}
+                        rows={5}
                         disabled={submitting}
                         className="w-full resize-none rounded-2xl border border-slate-600/80 bg-[#0a1220] p-4 text-sm leading-6 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-sky-400 focus:ring-2 focus:ring-sky-500/20 disabled:cursor-not-allowed disabled:opacity-60"
                       />
 
-                      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <p className="text-xs text-slate-400">
                           <i className="fa-solid fa-shield-halved mr-2 text-sky-300" />
                           Your answer is analyzed securely.
@@ -349,20 +350,21 @@ const Interview = () => {
               )}
 
               {isComplete && (
-                <div className="flex min-h-[380px] flex-col items-center justify-center text-center">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-500/10 text-3xl text-emerald-400 ring-1 ring-emerald-500/20">
+                <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-3xl text-emerald-400 ring-1 ring-emerald-500/20">
                     <i className="fa-solid fa-check" />
                   </div>
 
-                  <h2 className="mt-6 text-3xl font-bold text-white">
+                  <h2 className="mt-4 text-3xl font-bold text-white">
                     Interview Completed
                   </h2>
 
                   <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">
-                    Your answers have been evaluated successfully. You can now review the result.
+                    Your answers have been evaluated successfully. You can now
+                    review the result.
                   </p>
 
-                  <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                     <button
                       type="button"
                       onClick={() =>
@@ -386,7 +388,7 @@ const Interview = () => {
               )}
             </section>
 
-            <footer className="border-t border-slate-700/60 bg-[#0a1220] px-5 py-4 text-center text-[11px] text-slate-400 sm:px-7">
+            <footer className="border-t border-slate-700/60 bg-[#0a1220] px-5 py-3 text-center text-[11px] text-slate-400 sm:px-7">
               <i className="fa-solid fa-sparkles mr-2 text-violet-400" />
               Take your time, stay focused, and answer naturally.
             </footer>
@@ -403,7 +405,8 @@ const Interview = () => {
                   </h2>
 
                   <p className="mt-2 text-sm leading-6 text-slate-400">
-                    Your submitted answers have been saved. Do you want to leave?
+                    Your submitted answers have been saved. Do you want to
+                    leave?
                   </p>
 
                   <div className="mt-6 flex gap-3">
@@ -476,7 +479,7 @@ const SubmittingOverlay = () => (
 );
 
 const EmptyState = ({ onBack }) => (
-  <div className="flex min-h-[380px] flex-col items-center justify-center text-center">
+  <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
     <i className="fa-solid fa-circle-exclamation text-3xl text-amber-400" />
 
     <h2 className="mt-4 text-xl font-bold text-white">No questions available</h2>

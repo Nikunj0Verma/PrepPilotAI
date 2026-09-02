@@ -1,103 +1,710 @@
-@import "tailwindcss";
 
-*{
-    scroll-behavior: smooth;
-}
 
 .print-layout {
-            display: none;
-          }
+  display: none;
+}
 
-          @media print {
-            body {
-              background: #ffffff !important;
-              margin: 0 !important;
-              padding: 0 !important;
-            }
 
-            nav,
-            aside,
-            .navbar,
-            .sidebar,
-            .topbar,
-            .app-sidebar,
-            .layout-sidebar,
-            .main-nav,
-            .header,
-            .site-header,
-            header:not(.print-header) {
-              display: none !important;
-            }
+@media print {
 
-            .screen-layout {
-              display: none !important;
-            }
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
 
-            .print-layout {
-              display: flex !important;
-              justify-content: center !important;
-              align-items: center !important;
-              min-height: 100vh !important;
-              width: 100% !important;
-              padding: 0 !important;
-              margin: 0 !important;
-            }
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
 
-            .print-layout * {
-              -webkit-print-color-adjust: exact !important;
-              print-color-adjust: exact !important;
-            }
+    width: 100% !important;
+    height: auto !important;
 
-            .no-print {
-              display: none !important;
-            }
+    background: #ffffff !important;
 
-            .print-sheet {
-              width: 100% !important;
-              max-width: 900px !important;
-              margin: 0 auto !important;
-              box-shadow: none !important;
-              border: none !important;
-              background: #ffffff !important;
-              color: #0f172a !important;
-            }
+    position: static !important;
+    overflow: visible !important;
+  }
 
-            .print-sheet .print-card {
-              background: #f8fafc !important;
-              border: 1px solid #e2e8f0 !important;
-              color: #0f172a !important;
-              box-shadow: none !important;
-            }
+  body * {
+    visibility: hidden !important;
+  }
 
-            .print-sheet .print-muted {
-              color: #475569 !important;
-            }
+  .print-layout,
+  .print-layout * {
+    visibility: visible !important;
+  }
 
-            .print-sheet .print-dark {
-              color: #0f172a !important;
-            }
 
-            .print-sheet .print-soft {
-              color: #1e293b !important;
-            }
+  .print-layout {
+    display: block !important;
 
-            .print-sheet .print-badge {
-              background: #e0f2fe !important;
-              color: #0f172a !important;
-              border: 1px solid #bae6fd !important;
-            }
+    position: absolute !important;
 
-            .print-sheet .print-section {
-              background: #f8fafc !important;
-              border: 1px solid #e2e8f0 !important;
-            }
+    top: 0 !important;
+    left: 0 !important;
 
-            .print-sheet .print-score {
-              color: #0f172a !important;
-            }
+    width: 100% !important;
 
-            .print-sheet .print-footer {
-              background: #f8fafc !important;
-              border-top: 1px solid #e2e8f0 !important;
-            }
-          }
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: white !important;
+  }
+
+  .print-sheet {
+    width: 100% !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: white !important;
+
+    color: #172033 !important;
+
+    border: none !important;
+    border-radius: 0 !important;
+
+    box-shadow: none !important;
+
+    overflow: visible !important;
+  }
+
+  .print-header {
+    padding: 18px 20px 20px !important;
+
+    background: #f8fafc !important;
+
+    border: 1px solid #e1e7ef !important;
+
+    border-radius: 0 !important;
+  }
+
+
+  .print-brand-row {
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: space-between !important;
+
+    padding-bottom: 14px !important;
+  }
+
+
+  .print-brand {
+    display: flex !important;
+
+    align-items: center !important;
+
+    gap: 12px !important;
+  }
+
+
+  .print-logo {
+    width: 44px !important;
+    height: 44px !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    border-radius: 11px !important;
+
+    background: linear-gradient(
+      135deg,
+      #0ea5e9,
+      #2563eb
+    ) !important;
+
+    color: white !important;
+
+    font-size: 19px !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-eyebrow {
+    margin: 0 0 3px !important;
+
+    color: #1675a8 !important;
+
+    font-size: 8px !important;
+
+    font-weight: 800 !important;
+
+    letter-spacing: 0.22em !important;
+  }
+
+
+  .print-brand h1 {
+    margin: 0 !important;
+
+    color: #111827 !important;
+
+    font-size: 21px !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-result-date {
+    text-align: right !important;
+  }
+
+
+  .print-result-date p {
+    margin: 0 0 2px !important;
+
+    color: #64748b !important;
+
+    font-size: 8px !important;
+
+    font-weight: 800 !important;
+
+    letter-spacing: 0.2em !important;
+  }
+
+
+  .print-result-date strong {
+    color: #172033 !important;
+
+    font-size: 10px !important;
+  }
+
+
+  .print-title-card {
+    padding: 18px !important;
+
+    background: #ffffff !important;
+
+    border: 1px solid #e1e7ef !important;
+
+    border-radius: 14px !important;
+  }
+
+
+  .print-title-card h2 {
+    margin: 0 !important;
+
+    color: #111827 !important;
+
+    font-size: 23px !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-badges {
+    display: flex !important;
+
+    flex-wrap: wrap !important;
+
+    gap: 7px !important;
+
+    margin-top: 12px !important;
+  }
+
+
+  .print-badge {
+    padding: 7px 10px !important;
+
+    border: 1px solid #d9e2ec !important;
+
+    border-radius: 7px !important;
+
+    background: #eaf6fd !important;
+
+    color: #334155 !important;
+
+    font-size: 8.5px !important;
+  }
+
+
+  .print-badge span {
+    color: #64748b !important;
+  }
+
+
+  .print-badge strong {
+    color: #172033 !important;
+
+    font-weight: 700 !important;
+  }
+
+
+  .print-content {
+    padding: 18px 20px !important;
+
+    overflow: visible !important;
+  }
+
+  .print-summary-grid {
+    display: grid !important;
+
+    grid-template-columns: 1fr 1fr !important;
+
+    gap: 14px !important;
+
+    margin-bottom: 14px !important;
+  }
+
+
+  .print-card {
+    padding: 17px !important;
+
+    border: 1px solid #e1e7ef !important;
+
+    border-radius: 14px !important;
+
+    background: #f8fafc !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+  }
+
+
+  .print-card-label {
+    margin: 0 !important;
+
+    color: #64748b !important;
+
+    font-size: 9px !important;
+
+    font-weight: 700 !important;
+  }
+
+
+  .print-score {
+    display: flex !important;
+
+    align-items: baseline !important;
+
+    margin-top: 7px !important;
+  }
+
+
+  .print-score span {
+    color: #111827 !important;
+
+    font-size: 42px !important;
+
+    line-height: 1 !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-score small {
+    color: #475569 !important;
+
+    font-size: 18px !important;
+
+    font-weight: 600 !important;
+  }
+
+
+  .print-card h3 {
+    margin: 7px 0 0 !important;
+
+    font-size: 23px !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-description {
+    margin: 8px 0 0 !important;
+
+    color: #475569 !important;
+
+    font-size: 9.5px !important;
+
+    line-height: 1.55 !important;
+  }
+
+
+  .print-success {
+    color: #16a34a !important;
+  }
+
+
+  .print-warning {
+    color: #d97706 !important;
+  }
+
+
+  .print-danger {
+    color: #dc2626 !important;
+  }
+
+  .print-list-card {
+    margin-bottom: 14px !important;
+  }
+
+
+  .print-section-title {
+    display: flex !important;
+
+    align-items: center !important;
+
+    gap: 9px !important;
+
+    margin: 0 !important;
+
+    font-size: 17px !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-section-title i {
+    font-size: 15px !important;
+  }
+
+
+  .print-list-card ul {
+    list-style: none !important;
+
+    margin: 11px 0 0 !important;
+
+    padding: 0 !important;
+  }
+
+
+  .print-list-card li {
+    display: flex !important;
+
+    gap: 9px !important;
+
+    margin-bottom: 7px !important;
+
+    color: #475569 !important;
+
+    font-size: 9.5px !important;
+
+    line-height: 1.45 !important;
+  }
+
+
+  .print-list-card li:last-child {
+    margin-bottom: 0 !important;
+  }
+
+
+  .print-list-card li i {
+    margin-top: 2px !important;
+
+    color: #16a34a !important;
+
+    font-size: 9px !important;
+  }
+
+  .print-questions {
+    margin-top: 17px !important;
+
+    break-inside: auto !important;
+
+    page-break-inside: auto !important;
+  }
+
+
+  .print-questions-title {
+    margin: 0 0 11px !important;
+
+    color: #111827 !important;
+
+    font-size: 21px !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-question-list {
+    display: block !important;
+  }
+
+
+  .print-question {
+    margin-bottom: 12px !important;
+
+    border: 1px solid #dfe6ee !important;
+
+    border-radius: 14px !important;
+
+    background: #f8fafc !important;
+
+    overflow: hidden !important;
+
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+  }
+
+
+  /* =================================================
+     QUESTION HEADER
+  ================================================= */
+
+  .print-question-header {
+    display: grid !important;
+
+    grid-template-columns: 30px 1fr auto !important;
+
+    align-items: start !important;
+
+    gap: 9px !important;
+
+    padding: 11px 13px !important;
+
+    border-bottom: 1px solid #dfe6ee !important;
+  }
+
+
+  .print-question-number {
+    width: 27px !important;
+    height: 27px !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    border-radius: 50% !important;
+
+    background: #e4f0ff !important;
+
+    color: #2563eb !important;
+
+    font-size: 10px !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-question-text {
+    margin: 1px 0 0 !important;
+
+    color: #172033 !important;
+
+    font-size: 10px !important;
+
+    line-height: 1.45 !important;
+
+    font-weight: 700 !important;
+  }
+
+
+  .print-question-score {
+    padding: 5px 8px !important;
+
+    border-radius: 999px !important;
+
+    background: #e4f0ff !important;
+
+    color: #1769c2 !important;
+
+    font-size: 9px !important;
+
+    font-weight: 800 !important;
+
+    white-space: nowrap !important;
+  }
+
+  .print-question-body {
+    padding: 13px !important;
+  }
+
+
+  .print-answer-grid {
+    display: grid !important;
+
+    grid-template-columns: 1fr 1fr !important;
+
+    gap: 12px !important;
+  }
+
+
+  .print-answer-section h4 {
+    margin: 0 0 6px !important;
+
+    color: #16799f !important;
+
+    font-size: 10px !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-answer-box {
+    min-height: 58px !important;
+
+    padding: 10px !important;
+
+    border: 1px solid #dfe6ee !important;
+
+    border-radius: 10px !important;
+
+    background: #ffffff !important;
+
+    color: #475569 !important;
+
+    font-size: 9px !important;
+
+    line-height: 1.5 !important;
+
+    overflow-wrap: anywhere !important;
+  }
+
+  .print-score-grid {
+    display: grid !important;
+
+    grid-template-columns: repeat(4, 1fr) !important;
+
+    gap: 9px !important;
+
+    margin-top: 11px !important;
+  }
+
+
+  .print-score-badge {
+    padding: 9px !important;
+
+    border: 1px solid #dfe6ee !important;
+
+    border-radius: 10px !important;
+
+    background: white !important;
+  }
+
+
+  .print-score-badge-top {
+    display: flex !important;
+
+    justify-content: space-between !important;
+
+    gap: 5px !important;
+  }
+
+
+  .print-score-badge-top span {
+    color: #64748b !important;
+
+    font-size: 8.5px !important;
+  }
+
+
+  .print-score-badge-top strong {
+    color: #1769c2 !important;
+
+    font-size: 9px !important;
+  }
+
+
+  .print-progress {
+    height: 4px !important;
+
+    margin-top: 6px !important;
+
+    overflow: hidden !important;
+
+    border-radius: 999px !important;
+
+    background: #e2e8f0 !important;
+  }
+
+
+  .print-progress div {
+    height: 100% !important;
+
+    border-radius: 999px !important;
+
+    background: linear-gradient(
+      90deg,
+      #0ea5e9,
+      #2563eb
+    ) !important;
+  }
+
+  .print-empty {
+    padding: 15px !important;
+
+    border: 1px dashed #cbd5e1 !important;
+
+    border-radius: 10px !important;
+
+    color: #64748b !important;
+
+    font-size: 10px !important;
+  }
+  .print-report-footer {
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    align-items: center !important;
+
+    gap: 3px !important;
+
+    padding: 12px !important;
+
+    border-top: 1px solid #dfe6ee !important;
+
+    background: #f8fafc !important;
+
+    text-align: center !important;
+
+    break-inside: avoid !important;
+  }
+
+
+  .print-report-footer strong {
+    color: #172033 !important;
+
+    font-size: 10px !important;
+
+    font-weight: 800 !important;
+  }
+
+
+  .print-report-footer span {
+    color: #64748b !important;
+
+    font-size: 8px !important;
+  }
+  .print-summary-grid,
+  .print-list-card {
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+  }
+
+
+  .print-question {
+    break-inside: avoid !important;
+
+    page-break-inside: avoid !important;
+  }
+  .print-questions {
+    break-inside: auto !important;
+
+    page-break-inside: auto !important;
+  }
+  .print-question-list {
+    break-inside: auto !important;
+
+    page-break-inside: auto !important;
+  }
+  button,
+  .no-print {
+    display: none !important;
+  }
+  .print-sheet,
+  .print-sheet * {
+    box-shadow: none !important;
+  }
+
+}
