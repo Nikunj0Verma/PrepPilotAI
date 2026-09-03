@@ -18,6 +18,7 @@ import ResumeAnalyzer from "./components/ResumeAnalyzer";
 import CompanyPrep from "./components/CompanyPrep";
 import Progress from "./components/Progress";
 import Interview from "./components/Interview";
+import Resume from "./components/Resume";
 import { useLocation } from "react-router-dom";
 import InterviewResult from "./components/InterviewResult";
 
@@ -85,6 +86,21 @@ function AppRoutes() {
                   <main className="min-w-0 flex-1">
                     <PrivateNavbar />
                     <ResumeAnalyzer />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resume/analyze/:id"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <Resume />
                   </main>
                 </div>
               </ProtectedRoute>
