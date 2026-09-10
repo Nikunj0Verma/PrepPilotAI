@@ -186,6 +186,8 @@ const Dashboard = () => {
   const [resumes, setResumes] = useState([]);
   const [loadingResumes, setLoadingResumes] = useState(true);
   const [openMenuId, setOpenMenuId] = useState(null);
+  const [companies, setCompanies] = useState([]);
+  const [loadingCompanies, setLoadingCompanies] = useState(true);
 
   useEffect(() => {
     const fetchInterviews = async () => {
@@ -252,6 +254,39 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          "http://localhost:5000/api/company/my-companies",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch companies");
+        }
+
+        setCompanies(data || []);
+        console.log("Fetched companies:", data);
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+      } finally {
+        setLoadingCompanies(false);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -301,6 +336,10 @@ const Dashboard = () => {
     setOpenMenuId(null);
     navigate(`/resume/analyze/${resumeId}`);
   };
+  const handleViewCompanyResult = (companyId) => {
+    setOpenMenuId(null);
+    navigate(`/company-prep/${companyId}`);
+  };
 
   const handleDeleteInterview = async (id) => {
     const confirmed = window.confirm(
@@ -313,7 +352,7 @@ const Dashboard = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:5000/api/resume/my-resumes/${id}`,
+        `http://localhost:5000/api/interview/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -325,18 +364,18 @@ const Dashboard = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to delete resume");
+        throw new Error(data.message || "Failed to delete Interview");
       }
 
-      setResumes((previousResumes) =>
+      setInterviews((previousResumes) =>
         previousResumes.filter(
-          (resume) => (resume._id || resume.id) !== id
+          (resume) => (resume._id) !== id
         )
       );
 
       setOpenMenuId(null);
     } catch (error) {
-      console.error("Delete resume error:", error);
+      console.error("Delete interview error:", error);
       alert(error.message);
     }
   };
@@ -376,6 +415,45 @@ const Dashboard = () => {
       setOpenMenuId(null);
     } catch (error) {
       console.error("Delete resume error:", error);
+      alert(error.message);
+    }
+  };
+
+  const handleDeleteCompany = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this company preparation?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `http://localhost:5000/api/company/my-companies/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete company preparation");
+      }
+
+      setCompanies((previousCompanies) =>
+        previousCompanies.filter(
+          (company) => (company._id || company.id) !== id
+        )
+      );
+
+      setOpenMenuId(null);
+    } catch (error) {
+      console.error("Delete company preparation error:", error);
       alert(error.message);
     }
   };
@@ -421,11 +499,13 @@ const Dashboard = () => {
     },
   ];
 
-  const isLoading = loadingInterviews || loadingResumes;
+  const isLoading = loadingInterviews || loadingCompanies || loadingResumes;
   const hasNoActivity =
     !loadingInterviews &&
+    !loadingCompanies &&
     !loadingResumes &&
     interviews.length === 0 &&
+    companies.length === 0 &&
     resumes.length === 0;
 
   return (
@@ -762,6 +842,88 @@ const Dashboard = () => {
                           <button
                             type="button"
                             onClick={() => handleDeleteResume(resumeId)}
+                            className="flex w-full cursor-pointer items-center gap-3 border-t border-slate-100 px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
+                          >
+                            <i className="fa-solid fa-trash-can" />
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+            {!loadingCompanies &&
+              companies.map((company, index) => {
+                const companyId = company._id || company.id;
+                const menuId = `company-${companyId}`;
+
+                return (
+                  <div
+                    key={menuId || index}
+                    className={`relative flex flex-wrap items-center gap-4 p-4 md:p-5 ${
+                      index !== companies.length - 1
+                        ? "border-b border-slate-200"
+                        : ""
+                    }`}
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-indigo-600">
+                      <i className="fa-solid fa-file-lines" />
+                    </div>
+
+                    <div className="min-w-[180px] flex-1">
+                      <h3 className="text-base font-semibold text-slate-900">
+                        Company Preparation
+                      </h3>
+
+                      <p className="mt-1 text-sm text-slate-500">
+                        {company.name || "Company not specified"}
+                        {company.role ? ` • ${company.role}` : ""}
+                      </p>
+                    </div>
+
+                    <p className="text-sm text-slate-500">
+                      {formatTime(company.createdAt || company.updatedAt)}
+                    </p>
+
+                    {/* <p className="min-w-24 text-right text-sm font-bold text-slate-800">
+                      <span className="text-slate-500">Score: </span>
+                      {getCompanyScore(company)}
+                    </p> */}
+
+                    <div
+                      className="relative"
+                      data-menu-container
+                    >
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setOpenMenuId((previousId) =>
+                            previousId === menuId ? null : menuId
+                          );
+                        }}
+                        className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:border-violet-200 hover:text-violet-600"
+                        aria-label="Resume actions"
+                      >
+                        <i className="fa-solid fa-ellipsis-vertical" />
+                      </button>
+
+                      {openMenuId === menuId && (
+                        <div className="absolute right-0 top-11 z-50 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_20px_40px_rgba(15,23,42,0.16)]">
+                          <button
+                            type="button"
+                            onClick={() => handleViewCompanyResult(companyId)}
+                            className="flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:bg-violet-50 hover:text-violet-700"
+                          >
+                            <i className="fa-solid fa-square-poll-vertical text-violet-500" />
+                            Result
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteCompany(companyId)}
                             className="flex w-full cursor-pointer items-center gap-3 border-t border-slate-100 px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
                           >
                             <i className="fa-solid fa-trash-can" />

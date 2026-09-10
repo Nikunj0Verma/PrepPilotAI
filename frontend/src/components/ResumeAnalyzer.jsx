@@ -208,7 +208,7 @@ const ResumeAnalyzer = () => {
                   id="level"
                   value={level}
                   onChange={(event) => setLevel(event.target.value)}
-                  className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-10 text-sm text-slate-900 outline-none transition focus:border-violet-400 focus:ring-2 focus:ring-violet-200"
+                  className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-10 text-sm text-slate-900 outline-none transition focus:border-violet-400 focus:ring-2 focus:ring-violet-200 cursor-pointer"
                 >
                   <option>Entry Level</option>
                   <option>Mid Level</option>

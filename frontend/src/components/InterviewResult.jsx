@@ -99,7 +99,7 @@ const InterviewResult = () => {
           <button
             type="button"
             onClick={() => navigate("/interview-prep")}
-            className="mt-5 rounded-xl bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-500"
+            className="mt-5 rounded-xl bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-500 cursor-pointer"
           >
             Back to Interview Prep
           </button>
@@ -132,8 +132,9 @@ const InterviewResult = () => {
             <button
               type="button"
               onClick={() => navigate("/dashboard")}
-              aria-label="Close result"
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-600/80 bg-slate-800/70 text-slate-300 transition hover:bg-red-500/10 hover:text-red-300"
+              aria-label="Close and go to Dashboard"
+            title="Go to Dashboard"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-600/80 bg-slate-800/70 text-slate-300 transition hover:bg-red-500/10 hover:text-red-300 cursor-pointer"
             >
               <i className="fa-solid fa-xmark text-lg" />
             </button>
@@ -143,7 +144,8 @@ const InterviewResult = () => {
             <InfoBadge
               icon="fa-solid fa-layer-group"
               label="Type"
-              value={interview?.interviewType || "Technical"}
+              value={interview?.interviewType?  interview.interviewType.charAt(0).toUpperCase() +
+                        interview.interviewType.slice(1): "Technical"}
             />
 
             <InfoBadge
@@ -342,7 +344,7 @@ const InterviewResult = () => {
             <button
               type="button"
               onClick={handlePrint}
-              className="rounded-xl border border-sky-500/30 bg-sky-500/10 px-5 py-2.5 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/20"
+              className="rounded-xl border border-sky-500/30 bg-sky-500/10 px-5 py-2.5 text-sm font-semibold text-sky-200 transition hover:bg-sky-500/20 cursor-pointer"
             >
               <i className="fa-solid fa-file-pdf mr-2" />
               Print / Save as PDF
@@ -351,7 +353,7 @@ const InterviewResult = () => {
             <button
               type="button"
               onClick={() => navigate("/interview-prep")}
-              className="rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
+              className="rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:brightness-110 cursor-pointer"
             >
               <i className="fa-solid fa-rotate-right mr-2" />
               Take Another Interview
@@ -360,7 +362,7 @@ const InterviewResult = () => {
             <button
               type="button"
               onClick={() => navigate("/dashboard")}
-              className="rounded-xl border border-slate-600/80 bg-slate-800/60 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-slate-700/70"
+              className="rounded-xl border border-slate-600/80 bg-slate-800/60 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-slate-700/70 cursor-pointer"
             >
               <i className="fa-solid fa-chart-line mr-2" />
               Dashboard

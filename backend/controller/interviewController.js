@@ -12,9 +12,6 @@ const interviewController = {
     try {
       const { interviewType, jobRole, experienceLevel, numberOfQuestions } =
         req.body;
-
-        
-        
         const interview = await Interview.create({
           userId: req.user.userId,
           interviewType,
@@ -306,10 +303,9 @@ Rules:
   },
   deleteInterview: async (req, res) => {
   try {
-    const { id } = req.params;
 
     const interview = await Interview.findOneAndDelete({
-      _id: id,
+      _id: req.params.id,
       userId: req.user.userId,
     });
 

@@ -285,7 +285,7 @@ const InterviewPrep = () => {
                     type="button"
                     disabled={isStarting}
                     onClick={() => setInterviewType(type.id)}
-                    className={`rounded-[24px] border p-5 text-left transition-all duration-300 hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60 ${
+                    className={`rounded-[24px] border p-5 text-left transition-all duration-300 hover:-translate-y-1 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer ${
                       isSelected
                         ? "border-blue-500 bg-blue-50 shadow-[0_18px_40px_rgba(59,130,246,0.12)]"
                         : "border-slate-200 bg-white shadow-[0_10px_25px_rgba(15,23,42,0.04)] hover:border-blue-300 hover:shadow-[0_16px_35px_rgba(59,130,246,0.10)]"
@@ -379,7 +379,7 @@ const InterviewPrep = () => {
                     disabled={isStarting}
                     value={experienceLevel}
                     onChange={(event) => setExperienceLevel(event.target.value)}
-                    className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                   >
                     <option>Entry Level</option>
                     <option>Mid Level</option>
@@ -407,7 +407,7 @@ const InterviewPrep = () => {
                     disabled={isStarting}
                     value={numberOfQuestions}
                     onChange={(event) => setNumberOfQuestions(event.target.value)}
-                    className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                   >
                     <option value="5">5 Questions</option>
                     <option value="10">10 Questions</option>

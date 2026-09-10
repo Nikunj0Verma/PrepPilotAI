@@ -21,6 +21,9 @@ import Interview from "./components/Interview";
 import Resume from "./components/Resume";
 import { useLocation } from "react-router-dom";
 import InterviewResult from "./components/InterviewResult";
+import PublicRoute from "./components/PublicRoute";
+import ScrollToTop from "./components/ScrollToTop";
+import Company from "./components/Company";
 
 function AppRoutes() {
   const location = useLocation();
@@ -30,7 +33,9 @@ function AppRoutes() {
 
   return (
     <>
+    <ScrollToTop />
       <Routes location={backgroundLocation || location}>
+          <Route element={<PublicRoute />}>
           <Route
             path="/"
             element={
@@ -43,9 +48,9 @@ function AppRoutes() {
               </>
             }
           />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
+          </Route>
           <Route
             path="/dashboard"
             element={
@@ -122,6 +127,21 @@ function AppRoutes() {
             }
           />
           <Route
+            path="/company-prep/:id"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <Company />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/progress"
             element={
               <ProtectedRoute>
@@ -166,16 +186,34 @@ function AppRoutes() {
               </ProtectedRoute>
             }
           />
+          <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
 
+
       {backgroundLocation && (
-        <Routes>
-          <Route
-            path="/interview/:id"
-            element={<Interview />}
-          />
-        </Routes>
-      )}
+  <Routes>
+    <Route
+      path="/interview/:id"
+      element={
+        <Interview />
+      }
+    />
+
+    <Route
+      path="/resume/analyze/:id"
+      element={
+        <Resume />
+      }
+    />
+
+    <Route
+      path="/company-prep/:id"
+      element={
+        <Company />
+      }
+    />
+  </Routes>
+)}
     </>
   );
 }

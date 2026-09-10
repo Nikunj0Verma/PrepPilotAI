@@ -186,7 +186,7 @@ Rules:
             }
 
             return res.status(200).json({
-                message: "Resume deleted successfully",
+                message: "Resume Deleted Successfully",
             });
         } catch (error) {
             return res.status(500).json({

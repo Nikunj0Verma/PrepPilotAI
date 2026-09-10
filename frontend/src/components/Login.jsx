@@ -71,11 +71,11 @@ function Login() {
           to="/"
           className="flex cursor-pointer items-center gap-3 transition hover:opacity-90"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#2563EB] via-[#3B82F6] to-[#7C3AED] text-lg font-black text-white shadow-[0_12px_25px_rgba(59,130,246,0.35)]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 shadow-[0_10px_25px_rgba(59,130,246,0.35)] text-lg font-black text-white ">
             P
           </div>
 
-          <span className="bg-gradient-to-r from-[#1d4ed8] to-[#7C3AED] bg-clip-text text-xl font-bold tracking-tight text-transparent">
+          <span className="bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600 bg-clip-text text-transparent text-xl font-semibold tracking-tight">
             PrepPilot AI
           </span>
         </Link>

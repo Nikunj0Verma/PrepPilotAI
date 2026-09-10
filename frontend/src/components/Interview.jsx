@@ -38,8 +38,6 @@ const Interview = () => {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-
     const fetchInterview = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -63,13 +61,13 @@ const Interview = () => {
         setInterview(interviewData);
 
         const firstUnansweredIndex = interviewQuestions.findIndex(
-          (question) => !question.answer?.trim()
+          (question) => !question.answer?.trim(),
         );
 
         setCurrentQuestion(
           firstUnansweredIndex === -1
             ? interviewQuestions.length
-            : firstUnansweredIndex
+            : firstUnansweredIndex,
         );
       } catch (fetchError) {
         console.error("Error fetching interview:", fetchError);
@@ -112,6 +110,15 @@ const Interview = () => {
     if (submitting) return;
 
     setShowLeaveConfirm(false);
+
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
+
     navigate("/interview-prep");
   };
 
@@ -183,7 +190,7 @@ const Interview = () => {
 
       if (!evaluationResponse.ok) {
         throw new Error(
-          evaluationData.message || "Failed to evaluate interview"
+          evaluationData.message || "Failed to evaluate interview",
         );
       }
 
@@ -217,7 +224,7 @@ const Interview = () => {
                 onClick={handleClose}
                 disabled={submitting}
                 aria-label="Close interview"
-                className="absolute right-5 top-4 flex h-9 w-9 items-center justify-center rounded-xl border border-slate-600/80 bg-slate-800/70 text-slate-300 transition hover:bg-red-500/10 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-40"
+                className="absolute right-5 top-4 flex h-9 w-9 items-center justify-center rounded-xl border border-slate-600/80 bg-slate-800/70 text-slate-300 transition hover:bg-red-500/10 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
               >
                 <i className="fa-solid fa-xmark text-sm" />
               </button>
@@ -241,7 +248,12 @@ const Interview = () => {
                 <InfoBadge
                   icon="fa-solid fa-layer-group"
                   label="Type"
-                  value={interview?.interviewType || "Technical"}
+                  value={
+                    interview?.interviewType
+                      ? interview.interviewType.charAt(0).toUpperCase() +
+                        interview.interviewType.slice(1)
+                      : "Technical"
+                  }
                 />
                 <InfoBadge
                   icon="fa-solid fa-briefcase"
@@ -370,7 +382,7 @@ const Interview = () => {
                       onClick={() =>
                         navigate(`/interview/${id}/result`, { replace: true })
                       }
-                      className="rounded-xl bg-sky-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-sky-500"
+                      className="rounded-xl bg-sky-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-sky-500 cursor-pointer"
                     >
                       View Result
                       <i className="fa-solid fa-arrow-right ml-3" />
@@ -379,7 +391,7 @@ const Interview = () => {
                     <button
                       type="button"
                       onClick={() => navigate("/interview-prep")}
-                      className="rounded-xl border border-slate-600/80 bg-slate-800/60 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-slate-700/70"
+                      className="rounded-xl border border-slate-600/80 bg-slate-800/60 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-slate-700/70 cursor-pointer"
                     >
                       Back to Interview Prep
                     </button>
@@ -413,7 +425,7 @@ const Interview = () => {
                     <button
                       type="button"
                       onClick={() => setShowLeaveConfirm(false)}
-                      className="flex-1 rounded-xl border border-slate-600/80 bg-slate-800/60 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-slate-700/70"
+                      className="flex-1 rounded-xl border border-slate-600/80 bg-slate-800/60 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-slate-700/70 cursor-pointer"
                     >
                       Continue
                     </button>
@@ -421,7 +433,7 @@ const Interview = () => {
                     <button
                       type="button"
                       onClick={handleLeave}
-                      className="flex-1 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-600"
+                      className="flex-1 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-600 cursor-pointer"
                     >
                       Leave
                     </button>
@@ -445,9 +457,7 @@ const LoadingState = () => (
         <i className="fa-solid fa-spinner fa-spin text-2xl text-sky-300" />
       </div>
 
-      <p className="mt-4 text-sm text-slate-300">
-        Preparing your interview...
-      </p>
+      <p className="mt-4 text-sm text-slate-300">Preparing your interview...</p>
     </div>
   </div>
 );
@@ -482,7 +492,9 @@ const EmptyState = ({ onBack }) => (
   <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
     <i className="fa-solid fa-circle-exclamation text-3xl text-amber-400" />
 
-    <h2 className="mt-4 text-xl font-bold text-white">No questions available</h2>
+    <h2 className="mt-4 text-xl font-bold text-white">
+      No questions available
+    </h2>
 
     <p className="mt-2 text-sm text-slate-400">
       This interview does not contain any questions.

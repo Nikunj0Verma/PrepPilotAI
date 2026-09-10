@@ -81,7 +81,7 @@ const PrivateNavbar = () => {
           <button
             type="button"
             onClick={() => setIsOpen((prev) => !prev)}
-            className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-2 py-1.5 shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-md"
+            className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-2 py-1.5 shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-md cursor-pointer"
             aria-expanded={isOpen}
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 text-sm font-bold text-white shadow-[0_8px_18px_rgba(59,130,246,0.35)]">
