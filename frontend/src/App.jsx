@@ -25,6 +25,9 @@ import PublicRoute from "./components/PublicRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import Company from "./components/Company";
 import Profile from "./components/Profile";
+import Forgot_Password from "./components/Forgot_Password";
+import Change_Password from "./components/Change_Password";
+import Reset_Password from "./components/Reset_Password";
 
 function AppRoutes() {
   const location = useLocation();
@@ -51,6 +54,7 @@ function AppRoutes() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
+          <Route path="/forgot-password" element={<Forgot_Password />} />
           </Route>
           <Route
             path="/dashboard"
@@ -80,6 +84,24 @@ function AppRoutes() {
                   </main>
                 </div>
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/change-password"
+            element={
+              <ProtectedRoute>
+                  <main className="min-w-0 flex-1">
+                    <Change_Password />
+                  </main>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reset-password/:token"
+            element={
+                  <main className="min-w-0 flex-1">
+                    <Reset_Password />
+                  </main>
             }
           />
           <Route

@@ -290,7 +290,7 @@ const Profile = () => {
                 onClick={() =>
                   editingPersonal ? saveProfile() : setEditingPersonal(true)
                 }
-                className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 cursor-pointer bottom-0"
+                className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 cursor-pointer"
               >
                 {editingPersonal
                   ? saving

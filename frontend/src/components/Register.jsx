@@ -213,6 +213,7 @@ function Register() {
                     type={showPass ? "text" : "password"}
                     name="password"
                     placeholder="Create a password"
+                    minLength={6}
                     required
                     className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 pr-11 text-sm text-slate-900 outline-none transition focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-blue-200"
                     value={formData.password}
@@ -242,6 +243,7 @@ function Register() {
                 <input
                   type={showPass ? "text" : "password"}
                   name="confirmPassword"
+                  minLength={6}
                   placeholder="Confirm your password"
                   required
                   className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-blue-200"

@@ -8,5 +8,7 @@ authRouter.post("/register", authController.registerUser);
 authRouter.post("/login", authController.loginUser);
 authRouter.get("/me", authMiddleware, authController.getCurrentUser);
 authRouter.put("/profile", authMiddleware, authController.userProfile);
+authRouter.post("/forgot-password", authController.forgotpassword);
+authRouter.post("/reset-password/:token", authController.resetpassword);
 
 module.exports = authRouter;
