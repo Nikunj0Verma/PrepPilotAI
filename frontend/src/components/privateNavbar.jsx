@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const pageTitles = {
+  "/profile": "Profile",
   "/dashboard": "Dashboard",
   "/interview-prep": "Interview Prep",
   "/resume-analyzer": "Resume Analyzer",
@@ -45,14 +46,20 @@ const PrivateNavbar = () => {
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+        setIsOpen(false);
+  }, [location.pathname]);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login", { replace: true });
+  };
+  const handleProfile = () => {
+    navigate("/profile", { replace: true });
   };
 
   const isInterviewPage =
@@ -120,6 +127,14 @@ const PrivateNavbar = () => {
               </div>
 
               <div className="p-3">
+                <button
+                  type="button"
+                  onClick={handleProfile}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-gray-500 transition hover:bg-gray-50 cursor-pointer"
+                >
+                  <i className="fa-solid fa-circle-user" />
+                  Profile
+                </button>
                 <button
                   type="button"
                   onClick={handleLogout}

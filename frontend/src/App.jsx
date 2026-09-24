@@ -24,6 +24,7 @@ import InterviewResult from "./components/InterviewResult";
 import PublicRoute from "./components/PublicRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import Company from "./components/Company";
+import Profile from "./components/Profile";
 
 function AppRoutes() {
   const location = useLocation();
@@ -61,6 +62,21 @@ function AppRoutes() {
                   <main className="min-w-0 flex-1">
                     <PrivateNavbar />
                     <Dashboard />
+                  </main>
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <div className="flex min-h-screen">
+                  <SideBar />
+
+                  <main className="min-w-0 flex-1">
+                    <PrivateNavbar />
+                    <Profile />
                   </main>
                 </div>
               </ProtectedRoute>

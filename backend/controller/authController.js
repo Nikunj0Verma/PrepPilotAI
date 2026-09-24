@@ -75,6 +75,76 @@ const authController = {
       return res.status(500).json({ message: "Server error" });
     }
   },
+userProfile: async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      phnumber,
+      targetrole,
+      experiencelevel,
+      preferredcompany,
+      skills,
+    } = req.body || {};
+
+    if (!firstName || !lastName || !email) {
+      return res.status(400).json({
+        message: "First name, last name, and email are required",
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const existingUser = await User.findOne({
+      email: normalizedEmail,
+      _id: { $ne: req.user.userId },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email is already in use",
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.userId,
+      {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: normalizedEmail,
+        phnumber: phnumber?.trim() || "",
+        targetrole: targetrole?.trim() || "",
+        experiencelevel: experiencelevel?.trim() || "",
+        preferredcompany: preferredcompany?.trim() || "",
+        skills: Array.isArray(skills)
+          ? skills.join(", ")
+          : skills?.trim() || "",
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+},
 };
 
 module.exports = authController;
