@@ -10,5 +10,6 @@ authRouter.get("/me", authMiddleware, authController.getCurrentUser);
 authRouter.put("/profile", authMiddleware, authController.userProfile);
 authRouter.post("/forgot-password", authController.forgotpassword);
 authRouter.post("/reset-password/:token", authController.resetpassword);
+authRouter.put("/change-password", authMiddleware, authController.changePassword);
 
 module.exports = authRouter;

@@ -362,7 +362,7 @@ const Progress = () => {
             <button
               type="button"
               onClick={() => navigate("/interview-prep")}
-              className="mt-6 rounded-full bg-white px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
+              className="mt-6 rounded-full bg-white px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 cursor-pointer"
             >
               Start an Interview
               <i className="fa-solid fa-arrow-right ml-3" />
@@ -436,7 +436,7 @@ const Progress = () => {
                               onClick={() =>
                                 navigate(`/interview/${interviewId}/result`)
                               }
-                              className="font-semibold text-blue-600 transition hover:text-indigo-600"
+                              className="font-semibold text-blue-600 transition hover:text-indigo-600 cursor-pointer"
                             >
                               View
                               <i className="fa-solid fa-arrow-right ml-2 text-xs" />
