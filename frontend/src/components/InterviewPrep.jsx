@@ -71,7 +71,7 @@ const InterviewPrep = () => {
         if (!token) return;
 
         const response = await fetch(
-          "http://localhost:5000/api/interview/my-interviews",
+          `${import.meta.env.VITE_API_URL}/interview/my-interviews`,
           {
             method: "GET",
             headers: {
@@ -178,7 +178,7 @@ const InterviewPrep = () => {
       setIsStarting(true);
       setStartError("");
 
-      const response = await fetch("http://localhost:5000/api/interview/start", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/interview/start`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

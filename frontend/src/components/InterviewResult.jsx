@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const API_URL = "http://localhost:5000/api/interview";
+const API_URL = `${import.meta.env.VITE_API_URL}/interview`;
 const WEBSITE_NAME = "PrepPilot AI";
 
 const InterviewResult = () => {

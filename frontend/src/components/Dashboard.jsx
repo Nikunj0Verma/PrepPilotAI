@@ -195,7 +195,7 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:5000/api/interview/my-interviews",
+          `${import.meta.env.VITE_API_URL}/interview/my-interviews`,
           {
             method: "GET",
             headers: {
@@ -227,7 +227,7 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:5000/api/resume/my-resumes",
+          `${import.meta.env.VITE_API_URL}/resume/my-resumes`,
           {
             method: "GET",
             headers: {
@@ -259,7 +259,7 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:5000/api/company/my-companies",
+          `${import.meta.env.VITE_API_URL}/company/my-companies`,
           {
             method: "GET",
             headers: {
@@ -291,7 +291,7 @@ const Dashboard = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await fetch("http://localhost:5000/api/auth/me", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -352,7 +352,7 @@ const Dashboard = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:5000/api/interview/${id}`,
+        `${import.meta.env.VITE_API_URL}/interview/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -391,7 +391,7 @@ const Dashboard = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:5000/api/resume/my-resumes/${id}`,
+        `${import.meta.env.VITE_API_URL}/resume/my-resumes/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -430,7 +430,7 @@ const Dashboard = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:5000/api/company/my-companies/${id}`,
+        `${import.meta.env.VITE_API_URL}/company/my-companies/${id}`,
         {
           method: "DELETE",
           headers: {

@@ -26,7 +26,7 @@ const CompanyPrep = () => {
       setIsGenerating(true);
       setError("");
       const detailsResponse = await fetch(
-        "http://localhost:5000/api/company/details",
+        `${import.meta.env.VITE_API_URL}/company/details`,
         {
           method: "POST",
           headers: {
@@ -57,7 +57,7 @@ const CompanyPrep = () => {
       }
 
       const analysisResponse = await fetch(
-        `http://localhost:5000/api/company/analysis/${companyId}`,
+        `${import.meta.env.VITE_API_URL}/company/analysis/${companyId}`,
         {
           method: "POST",
           headers: {

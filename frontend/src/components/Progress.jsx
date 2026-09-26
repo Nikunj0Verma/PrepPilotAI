@@ -266,7 +266,7 @@ const Progress = () => {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:5000/api/interview/my-interviews",
+          `${import.meta.env.VITE_API_URL}/interview/my-interviews`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

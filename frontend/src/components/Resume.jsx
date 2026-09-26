@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const API_URL = "http://localhost:5000/api/resume/analyze";
+const API_URL = `${import.meta.env.VITE_API_URL}/resume/analyze`;
 
 const Resume = () => {
   const navigate = useNavigate();
