@@ -79,7 +79,7 @@ const Company = () => {
           <header className="border-b border-slate-700/60 bg-gradient-to-r from-[#101827] via-[#121d31] to-[#0d1426] px-5 py-5 sm:px-7">
             <button
               type="button"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate(-1)}
               aria-label="Close company preparation"
               className="absolute right-5 top-5 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-slate-600/80 text-slate-300 transition hover:border-red-400 hover:bg-red-500/10 hover:text-red-300"
             >

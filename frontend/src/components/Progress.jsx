@@ -11,6 +11,15 @@ const formatDate = (value) => {
   });
 };
 
+const shortDate = (value) => {
+  if (!value) return "—";
+
+  return new Date(value).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+};
+
 const getScore = (interview) => {
   const score = Number(interview?.evaluation?.overallScore);
   return Number.isFinite(score) ? Math.round(score) : 0;
@@ -25,10 +34,68 @@ const getInterviewType = (interview) => {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 };
 
+const getInterviewIconText = (interview) => {
+  const type = getInterviewType(interview).toLowerCase();
+
+  if (type.includes("technical")) return "T";
+  if (type.includes("behavior")) return "B";
+  if (type.includes("manager")) return "M";
+  if (type.includes("hr")) return "H";
+  if (type.includes("system")) return "S";
+  if (type.includes("design")) return "D";
+  if (type.includes("product")) return "P";
+  if (type.includes("data")) return "D";
+
+  return (type.charAt(0) || "I").toUpperCase();
+};
+
+const getTypeGradient = (interview) => {
+  const type = getInterviewType(interview).toLowerCase();
+
+  if (type.includes("technical")) return "from-blue-600 to-indigo-500";
+  if (type.includes("behavior")) return "from-emerald-500 to-teal-500";
+  if (type.includes("manager")) return "from-violet-500 to-purple-500";
+  if (type.includes("hr")) return "from-amber-500 to-orange-500";
+  if (type.includes("design")) return "from-pink-500 to-rose-500";
+  if (type.includes("product")) return "from-cyan-500 to-sky-500";
+
+  return "from-slate-600 to-slate-500";
+};
+
+const getPerformanceLabel = (score) => {
+  if (score >= 80) return "Strong";
+  if (score >= 60) return "Good";
+  if (score >= 40) return "Improving";
+  return "Needs work";
+};
+
+const getPerformanceTone = (score) => {
+  if (score >= 80)
+    return {
+      badge: "bg-emerald-100 text-emerald-700 border-emerald-200",
+      dot: "bg-emerald-500",
+    };
+  if (score >= 60)
+    return {
+      badge: "bg-blue-100 text-blue-700 border-blue-200",
+      dot: "bg-blue-500",
+    };
+  if (score >= 40)
+    return {
+      badge: "bg-amber-100 text-amber-700 border-amber-200",
+      dot: "bg-amber-500",
+    };
+
+  return {
+    badge: "bg-rose-100 text-rose-700 border-rose-200",
+    dot: "bg-rose-500",
+  };
+};
+
 const ProgressChart = ({ interviews }) => {
   const chartWidth = 760;
   const chartHeight = 280;
-  const padding = { top: 24, right: 24, bottom: 48, left: 44 };
+  const padding = { top: 18, right: 18, bottom: 42, left: 42 };
   const graphWidth = chartWidth - padding.left - padding.right;
   const graphHeight = chartHeight - padding.top - padding.bottom;
 
@@ -41,12 +108,24 @@ const ProgressChart = ({ interviews }) => {
     const y =
       padding.top + graphHeight - (getScore(interview) / 100) * graphHeight;
 
-    return { x, y, score: getScore(interview), interview };
+    return {
+      x,
+      y,
+      score: getScore(interview),
+      interview,
+    };
   });
 
-  const path = points
+  const linePath = points
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
+
+  const areaPath = `${linePath} L ${points[points.length - 1].x} ${
+    chartHeight - padding.bottom
+  } L ${points[0].x} ${chartHeight - padding.bottom} Z`;
+
+  const getY = (score) =>
+    padding.top + graphHeight - (score / 100) * graphHeight;
 
   return (
     <div className="overflow-x-auto">
@@ -56,9 +135,30 @@ const ProgressChart = ({ interviews }) => {
         role="img"
         aria-label="Interview score performance chart"
       >
+        <defs>
+          <linearGradient id="lineGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+            <stop offset="0%" stopColor="#4f46e5" />
+            <stop offset="50%" stopColor="#7c3aed" />
+            <stop offset="100%" stopColor="#06b6d4" />
+          </linearGradient>
+
+          <linearGradient id="areaGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(99,102,241,0.35)" />
+            <stop offset="100%" stopColor="rgba(99,102,241,0.02)" />
+          </linearGradient>
+        </defs>
+
+        <rect
+          x="0"
+          y="0"
+          width={chartWidth}
+          height={chartHeight}
+          rx="18"
+          fill="#f8fafc"
+        />
+
         {[0, 25, 50, 75, 100].map((value) => {
-          const y =
-            padding.top + graphHeight - (value / 100) * graphHeight;
+          const y = getY(value);
 
           return (
             <g key={value}>
@@ -71,11 +171,11 @@ const ProgressChart = ({ interviews }) => {
                 strokeDasharray="5 5"
               />
               <text
-                x={padding.left - 12}
+                x={padding.left - 10}
                 y={y + 4}
                 textAnchor="end"
                 fill="#64748b"
-                fontSize="12"
+                fontSize="11"
               >
                 {value}
               </text>
@@ -83,36 +183,29 @@ const ProgressChart = ({ interviews }) => {
           );
         })}
 
-        <text
-          x="14"
-          y={chartHeight / 2}
-          transform={`rotate(-90 14 ${chartHeight / 2})`}
-          textAnchor="middle"
-          fill="#64748b"
-          fontSize="12"
-        >
-          Score
-        </text>
-
-        <text
-          x={chartWidth / 2}
-          y={chartHeight - 8}
-          textAnchor="middle"
-          fill="#64748b"
-          fontSize="12"
-        >
-          Date
-        </text>
+        {points.map((point, index) => (
+          <line
+            key={`guide-${index}`}
+            x1={point.x}
+            x2={point.x}
+            y1={padding.top}
+            y2={chartHeight - padding.bottom}
+            stroke="#f1f5f9"
+          />
+        ))}
 
         {points.length > 1 && (
-          <path
-            d={path}
-            fill="none"
-            stroke="#2563eb"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          <>
+            <path d={areaPath} fill="url(#areaGradient)" />
+            <path
+              d={linePath}
+              fill="none"
+              stroke="url(#lineGradient)"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </>
         )}
 
         {points.map((point, index) => (
@@ -120,21 +213,40 @@ const ProgressChart = ({ interviews }) => {
             <circle
               cx={point.x}
               cy={point.y}
-              r="6"
-              fill="#ffffff"
-              stroke="#2563eb"
-              strokeWidth="4"
+              r="7"
+              fill="#fff"
+              stroke="#4f46e5"
+              strokeWidth="3"
             />
+
+            <circle
+              cx={point.x}
+              cy={point.y}
+              r="12"
+              fill="transparent"
+              stroke="rgba(79,70,229,0.15)"
+              strokeWidth="1"
+            />
+
             <text
               x={point.x}
-              y={chartHeight - 22}
+              y={point.y - 14}
+              textAnchor="middle"
+              fill="#1f2937"
+              fontSize="11"
+              fontWeight="700"
+            >
+              {point.score}
+            </text>
+
+            <text
+              x={point.x}
+              y={chartHeight - 18}
               textAnchor="middle"
               fill="#64748b"
-              fontSize="11"
+              fontSize="10"
             >
-              {formatDate(
-                point.interview.createdAt || point.interview.updatedAt
-              )}
+              {shortDate(point.interview.createdAt || point.interview.updatedAt)}
             </text>
           </g>
         ))}
@@ -171,8 +283,8 @@ const Progress = () => {
         const completedInterviews = (data.interviews || [])
           .filter(
             (interview) =>
-              interview.status === "completed" ||
-              interview.evaluation?.overallScore !== undefined
+              interview.status === "completed" &&
+              Number(interview?.evaluation?.overallScore) > 0
           )
           .sort(
             (a, b) =>
@@ -194,6 +306,7 @@ const Progress = () => {
 
   const progressStats = useMemo(() => {
     const scores = interviews.map(getScore).filter((score) => score > 0);
+
     const average =
       scores.length > 0
         ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length)
@@ -213,21 +326,72 @@ const Progress = () => {
     if (!interviews.length) {
       return {
         strong: "Complete your first interview to unlock personalized insights.",
-        improve: "Practice regularly to build confidence and improve your score.",
+        momentum:
+          "Your progress will appear here once you complete more interview rounds.",
+        focus:
+          "Focus on one clear interview strategy first: structure, examples, and confident closing.",
       };
     }
 
-    const sorted = [...interviews].sort((a, b) => getScore(b) - getScore(a));
-    const strongestType = getInterviewType(sorted[0]);
-    const weakest = [...interviews].sort((a, b) => getScore(a) - getScore(b))[0];
+    const scores = interviews.map(getScore);
+    const averageScore =
+      scores.reduce((sum, score) => sum + score, 0) / scores.length;
+
+    const typeGroups = interviews.reduce((acc, interview) => {
+      const type = getInterviewType(interview);
+      if (!acc[type]) acc[type] = [];
+      acc[type].push(getScore(interview));
+      return acc;
+    }, {});
+
+    const strongestType = Object.entries(typeGroups).sort((a, b) => {
+      const avgA =
+        a[1].reduce((sum, score) => sum + score, 0) / a[1].length;
+      const avgB =
+        b[1].reduce((sum, score) => sum + score, 0) / b[1].length;
+
+      return avgB - avgA;
+    })[0];
+
+    const strongestTypeAvg =
+      strongestType[1].reduce((sum, score) => sum + score, 0) /
+      strongestType[1].length;
+
+    const recentScores = scores.slice(-Math.min(3, scores.length));
+    const previousScores = scores.slice(0, Math.min(3, scores.length));
+
+    const recentAvg =
+      recentScores.reduce((sum, score) => sum + score, 0) / recentScores.length;
+    const previousAvg =
+      previousScores.length > 0
+        ? previousScores.reduce((sum, score) => sum + score, 0) /
+          previousScores.length
+        : recentAvg;
+
+    const scoreTrend = recentAvg - previousAvg;
+
+    const weakestInterview = [...interviews].sort(
+      (a, b) => getScore(a) - getScore(b)
+    )[0];
 
     return {
-      strong: `Your strongest performance is in ${strongestType.toLowerCase()} interviews, with a best score of ${getScore(sorted[0])}%.`,
-      improve: `Focus on ${getInterviewType(
-        weakest
-      ).toLowerCase()} interviews to improve your current score of ${getScore(
-        weakest
-      )}%.`,
+      strong: `Your best-performing interviews are ${strongestType[0].toLowerCase()} rounds, averaging ${Math.round(
+        strongestTypeAvg
+      )}% across those attempts.`,
+      momentum: `Your recent performance is ${
+        scoreTrend >= 0 ? "improving" : "slightly below"
+      } earlier sessions (${Math.round(recentAvg)}% vs ${Math.round(
+        previousAvg
+      )}%), suggesting ${
+        scoreTrend >= 0
+          ? "your preparation is compounding."
+          : "you may need a more targeted practice session."
+      }`,
+      focus: `Your lowest score currently comes from ${getInterviewType(
+        weakestInterview
+      ).toLowerCase()} interviews. Focus on tightening your structure, using stronger STAR examples, and ending with a confident summary to move closer to ${Math.round(
+        averageScore + 10
+      )}% overall.`,
     };
   }, [interviews]);
 
@@ -322,132 +486,160 @@ const Progress = () => {
           )}
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-2">
+        <section className="grid gap-6 lg:grid-cols-3">
           <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_12px_30px_rgba(15,23,42,0.04)] md:p-8">
-            <h2 className="text-2xl font-bold text-slate-900">AI Insights</h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Personalized guidance based on your interview history.
-            </p>
-
-            <div className="mt-6 space-y-4">
-              <div className="rounded-2xl bg-emerald-50 p-5">
-                <div className="flex items-center gap-3 text-emerald-700">
-                  <i className="fa-solid fa-thumbs-up" />
-                  <h3 className="font-bold">Strong Areas</h3>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-emerald-900">
-                  {insights.strong}
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-amber-50 p-5">
-                <div className="flex items-center gap-3 text-amber-700">
-                  <i className="fa-solid fa-bullseye" />
-                  <h3 className="font-bold">Improve</h3>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-amber-900">
-                  {insights.improve}
-                </p>
-              </div>
+            <div className="flex items-center gap-3 text-emerald-700">
+              <i className="fa-solid fa-thumbs-up" />
+              <h3 className="font-bold text-slate-900">Strong Areas</h3>
             </div>
+            <p className="mt-4 text-sm leading-6 text-slate-700">
+              {insights.strong}
+            </p>
           </div>
 
-          <div className="rounded-[28px] border border-slate-200 bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white shadow-[0_12px_30px_rgba(37,99,235,0.2)] md:p-8">
-            <i className="fa-solid fa-lightbulb text-3xl text-cyan-200" />
-            <h2 className="mt-5 text-2xl font-bold">Keep practicing</h2>
-            <p className="mt-3 text-sm leading-7 text-blue-100">
-              Consistent practice is the best way to improve your confidence and
-              interview score.
+          <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_12px_30px_rgba(15,23,42,0.04)] md:p-8">
+            <div className="flex items-center gap-3 text-violet-700">
+              <i className="fa-solid fa-chart-line" />
+              <h3 className="font-bold text-slate-900">Momentum</h3>
+            </div>
+            <p className="mt-4 text-sm leading-6 text-slate-700">
+              {insights.momentum}
             </p>
-            <button
-              type="button"
-              onClick={() => navigate("/interview-prep")}
-              className="mt-6 rounded-full bg-white px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 cursor-pointer"
-            >
-              Start an Interview
-              <i className="fa-solid fa-arrow-right ml-3" />
-            </button>
+          </div>
+
+          <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_12px_30px_rgba(15,23,42,0.04)] md:p-8">
+            <div className="flex items-center gap-3 text-amber-700">
+              <i className="fa-solid fa-bullseye" />
+              <h3 className="font-bold text-slate-900">Focus Area</h3>
+            </div>
+            <p className="mt-4 text-sm leading-6 text-slate-700">
+              {insights.focus}
+            </p>
           </div>
         </section>
 
-        <section className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_12px_30px_rgba(15,23,42,0.04)]">
-          <div className="p-6 md:p-8">
-            <h2 className="text-2xl font-bold text-slate-900">
-              Interview History
-            </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Review your previous interview attempts.
-            </p>
+        <section className="rounded-[28px] border border-slate-200 bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white shadow-[0_12px_30px_rgba(37,99,235,0.2)] md:p-8">
+          <i className="fa-solid fa-lightbulb text-3xl text-cyan-200" />
+          <h2 className="mt-5 text-2xl font-bold">Keep practicing</h2>
+          <p className="mt-3 text-sm leading-7 text-blue-100">
+            Consistent practice is the best way to improve your confidence and
+            interview score.
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate("/interview-prep")}
+            className="mt-6 rounded-full bg-white px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 cursor-pointer"
+          >
+            Start an Interview
+            <i className="fa-solid fa-arrow-right ml-3" />
+          </button>
+        </section>
+
+        <section className="rounded-[30px] border border-slate-200 bg-white shadow-[0_12px_30px_rgba(15,23,42,0.04)]">
+          <div className="flex flex-col gap-3 border-b border-slate-200 p-6 md:flex-row md:items-end md:justify-between md:p-8">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                Archive
+              </p>
+              <h2 className="mt-2 text-2xl font-bold text-slate-900">
+                Interview History
+              </h2>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">
+                {interviews.length} sessions
+              </span>
+              <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">
+                Latest first
+              </span>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[620px] text-left text-sm">
-              <thead className="border-y border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-                <tr>
-                  <th className="px-6 py-4 font-semibold">Role</th>
-                  <th className="px-6 py-4 font-semibold">Type</th>
-                  <th className="px-6 py-4 font-semibold">Score</th>
-                  <th className="px-6 py-4 font-semibold">Date</th>
-                  <th className="px-6 py-4 text-right font-semibold">View</th>
-                </tr>
-              </thead>
+          <div className="grid gap-4 p-4 md:p-6">
+            {interviews.length === 0 ? (
+              <div className="rounded-[22px] border border-dashed border-slate-200 bg-slate-50 p-10 text-center text-sm text-slate-500">
+                No interview history found.
+              </div>
+            ) : (
+              [...interviews] 
+                .map((interview, index) => {
+                  const interviewId = interview._id || interview.id;
+                  const score = getScore(interview);
+                  const type = getInterviewType(interview);
+                  const performance = getPerformanceLabel(score);
+                  const colorClasses = getPerformanceTone(score);
+                  const iconText = getInterviewIconText(interview);
+                  const iconGradient = getTypeGradient(interview);
 
-              <tbody>
-                {interviews.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="px-6 py-10 text-center text-slate-500"
+                  return (
+                    <div
+                      key={interviewId || index}
+                      className="group relative overflow-hidden rounded-[24px] border border-slate-200 bg-slate-50 p-4 transition-all duration-200 hover:border-blue-200 hover:bg-white hover:shadow-[0_12px_24px_rgba(59,130,246,0.08)]"
                     >
-                      No interview history found.
-                    </td>
-                  </tr>
-                ) : (
-                  interviews
-                    .slice()
-                    .reverse()
-                    .map((interview, index) => {
-                      const interviewId = interview._id || interview.id;
 
-                      return (
-                        <tr
-                          key={interviewId || index}
-                          className="border-b border-slate-100 last:border-0"
-                        >
-                          <td className="px-6 py-5 font-semibold text-slate-900">
-                            {interview.jobRole || "Interview"}
-                          </td>
-                          <td className="px-6 py-5 text-slate-500">
-                            {getInterviewType(interview)}
-                          </td>
-                          <td className="px-6 py-5">
-                            <span className="rounded-full bg-blue-50 px-3 py-1.5 font-bold text-blue-600">
-                              {getScore(interview)}%
+                      <div className="flex flex-col gap-4 pl-3 md:flex-row md:items-center md:justify-between">
+                        <div className="flex items-start gap-4">
+                          <div
+                            className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${iconGradient} text-lg font-bold text-white shadow-md`}
+                          >
+                            {iconText}
+                          </div>
+
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <h3 className="truncate text-lg font-bold text-slate-900">
+                                {interview.jobRole || "Interview"}
+                              </h3>
+                              <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600">
+                                {type}
+                              </span>
+                            </div>
+
+                            <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate-500">
+                              <span className="inline-flex items-center gap-2">
+                                <i className="fa-regular fa-calendar text-blue-500" />
+                                {formatDate(interview.createdAt || interview.updatedAt)}
+                              </span>
+
+                              <span className="inline-flex items-center gap-2">
+                                <i className="fa-solid fa-circle-play text-violet-500" />
+                                Attempt #{interviews.length - index}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-start gap-3 md:items-end">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-semibold ${colorClasses.badge}`}
+                            >
+                              <span
+                                className={`h-2 w-2 rounded-full ${colorClasses.dot}`}
+                              />
+                              {performance}
                             </span>
-                          </td>
-                          <td className="px-6 py-5 text-slate-500">
-                            {formatDate(
-                              interview.createdAt || interview.updatedAt
-                            )}
-                          </td>
-                          <td className="px-6 py-5 text-right">
+                          </div>
+
+                          <div className="flex items-center gap-3">
                             <button
                               type="button"
                               onClick={() =>
                                 navigate(`/interview/${interviewId}/result`)
                               }
-                              className="font-semibold text-blue-600 transition hover:text-indigo-600 cursor-pointer"
+                              className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 cursor-pointer"
                             >
-                              View
-                              <i className="fa-solid fa-arrow-right ml-2 text-xs" />
+                              View result
+                              <i className="fa-solid fa-arrow-right text-xs" />
                             </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                )}
-              </tbody>
-            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+            )}
           </div>
         </section>
       </div>

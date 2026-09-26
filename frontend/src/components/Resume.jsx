@@ -177,7 +177,7 @@ const Resume = () => {
 
           <button
             type="button"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate(-1)}
             aria-label="Close and go to Dashboard"
             title="Go to Dashboard"
             className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-slate-600/80 text-slate-300 transition hover:border-red-400 hover:bg-red-500/10 hover:text-red-300"

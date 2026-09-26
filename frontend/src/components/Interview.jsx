@@ -119,8 +119,35 @@ const Interview = () => {
     document.body.style.overflow = "";
     document.documentElement.style.overflow = "";
 
-    navigate("/interview-prep");
+    navigate(-1);
   };
+
+  useEffect(() => {
+  const handleEnterKey = (e) => {
+    if (e.key !== "Enter") return;
+    if (submitting) return;
+    if (
+      e.target.tagName === "TEXTAREA" ||
+      e.target.tagName === "INPUT"
+    ) {
+      return;
+    }
+    if (showLeaveConfirm) return;
+
+    const form = document.querySelector("#interview-answer-form");
+
+    if (form) {
+      e.preventDefault();
+      form.requestSubmit();
+    }
+  };
+
+  window.addEventListener("keydown", handleEnterKey);
+
+  return () => {
+    window.removeEventListener("keydown", handleEnterKey);
+  };
+}, [submitting, showLeaveConfirm]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -315,7 +342,7 @@ const Interview = () => {
                       </div>
                     </div>
 
-                    <form onSubmit={handleSubmit}>
+                    <form id="interview-answer-form" onSubmit={handleSubmit}>
                       <div className="mb-2">
                         <label
                           htmlFor="answer"
@@ -332,6 +359,12 @@ const Interview = () => {
                         placeholder="Type your answer here..."
                         rows={5}
                         disabled={submitting}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            e.currentTarget.form.requestSubmit();
+                          }
+                        }}
                         className="w-full resize-none rounded-2xl border border-slate-600/80 bg-[#0a1220] p-4 text-sm leading-6 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-sky-400 focus:ring-2 focus:ring-sky-500/20 disabled:cursor-not-allowed disabled:opacity-60"
                       />
 

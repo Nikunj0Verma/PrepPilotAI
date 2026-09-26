@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const API_URL = "http://localhost:5000/api/interview";
 const WEBSITE_NAME = "PrepPilot AI";
-const WEBSITE_TAGLINE = "Your AI-powered interview preparation companion";
 
 const InterviewResult = () => {
   const navigate = useNavigate();
@@ -131,9 +130,9 @@ const InterviewResult = () => {
 
             <button
               type="button"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate(-1)}
               aria-label="Close and go to Dashboard"
-            title="Go to Dashboard"
+              title="Go to Dashboard"
               className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-600/80 bg-slate-800/70 text-slate-300 transition hover:bg-red-500/10 hover:text-red-300 cursor-pointer"
             >
               <i className="fa-solid fa-xmark text-lg" />
@@ -144,8 +143,12 @@ const InterviewResult = () => {
             <InfoBadge
               icon="fa-solid fa-layer-group"
               label="Type"
-              value={interview?.interviewType?  interview.interviewType.charAt(0).toUpperCase() +
-                        interview.interviewType.slice(1): "Technical"}
+              value={
+                interview?.interviewType
+                  ? interview.interviewType.charAt(0).toUpperCase() +
+                    interview.interviewType.slice(1)
+                  : "Technical"
+              }
             />
 
             <InfoBadge
@@ -270,7 +273,7 @@ const InterviewResult = () => {
                           setExpandedQuestion(isExpanded ? null : index)
                         }
                         aria-expanded={isExpanded}
-                        className="flex w-full items-center gap-3 p-3 text-left transition hover:bg-white/5"
+                        className="flex w-full items-center gap-3 p-3 text-left transition hover:bg-white/5 cursor-pointer"
                       >
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-500/15 text-xs font-bold text-sky-300">
                           {index + 1}
