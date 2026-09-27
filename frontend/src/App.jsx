@@ -1,6 +1,6 @@
 import PublicNavbar from "./components/PublicNavbar";
-import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import "./App.css";
 import HeroSection from "./components/HeroSection";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -39,8 +39,8 @@ function AppRoutes() {
   return (
     <>
     <ScrollToTop />
-    <Analytics />
       <Routes location={backgroundLocation || location}>
+        <Analytics />
           <Route element={<PublicRoute />}>
           <Route
             path="/"
