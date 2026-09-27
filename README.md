@@ -156,7 +156,7 @@ Password reset tokens are securely hashed before being stored and expire after a
 
 ### Landing Page
 
-Add your landing page screenshot here.
+![Landing Page](./screenshots/landing-page.png)
 
 ### Dashboard
 
@@ -175,6 +175,10 @@ Add your landing page screenshot here.
 ![Resume Analyzer](./screenshots/resume-analyzer.png)
 
 ### Company Preparation
+
+![Company Preparation](./screenshots/company-preparation.png)
+
+### Progrss
 
 ![Progress](./screenshots/progress.png)
 
