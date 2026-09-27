@@ -1,34 +1,14 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    family: 4,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-    },
-});
-
-transporter.verify((error, success) => {
-    if (error) {
-        console.log("EMAIL TRANSPORTER ERROR:");
-        console.log(error);
-    } else {
-        console.log("EMAIL SERVER IS READY");
-    }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendResetEmail = async (email, resetUrl) => {
-    try {
-        const info = await transporter.sendMail({
-            from: `"PrepPilot AI" <${process.env.EMAIL_USER}>`,
-            to: email,
-            subject: "Reset Your PrepPilot AI Password",
-            html: `
-                 <div style="font-family: Arial, sans-serif; padding: 20px;">
+    const { data, error } = await resend.emails.send({
+        from: "PrepPilot AI <onboarding@resend.dev>",
+        to: [email],
+        subject: "Reset Your PrepPilot AI Password",
+        html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6;">
                 <h2>Reset Your Password</h2>
 
                 <p>
@@ -39,37 +19,44 @@ const sendResetEmail = async (email, resetUrl) => {
                     Click the button below to create a new password:
                 </p>
 
-                <a href="${resetUrl}"
-                   style="
-                       display: inline-block;
-                       padding: 12px 20px;
-                       background: #2563eb;
-                       color: white;
-                       text-decoration: none;
-                       border-radius: 8px;
-                   ">
+                <a
+                    href="${resetUrl}"
+                    style="
+                        display:inline-block;
+                        padding:12px 20px;
+                        background:#2563eb;
+                        color:white;
+                        text-decoration:none;
+                        border-radius:6px;
+                    "
+                >
                     Reset Password
                 </a>
 
-                <p style="margin-top: 20px;">
+                <p>
                     This link will expire in 15 minutes.
                 </p>
 
                 <p>
-                    If you didn't request a password reset, you can ignore
-                    this email.
+                    If you did not request a password reset, you can safely
+                    ignore this email.
+                </p>
+
+                <p>
+                    — PrepPilot AI
                 </p>
             </div>
-            `,
-        });
+        `,
+    });
 
-        console.log("EMAIL SENT:", info.messageId);
-
-    } catch (error) {
-        console.log("SEND EMAIL ERROR:");
-        console.log(error);
+    if (error) {
+        console.error("Resend email error:", error);
         throw error;
     }
+
+    console.log("Password reset email sent:", data?.id);
+
+    return data;
 };
 
 module.exports = sendResetEmail;
