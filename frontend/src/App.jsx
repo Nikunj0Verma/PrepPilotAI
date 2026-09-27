@@ -39,8 +39,8 @@ function AppRoutes() {
   return (
     <>
     <ScrollToTop />
-      <Routes location={backgroundLocation || location}>
         <Analytics />
+      <Routes location={backgroundLocation || location}>
           <Route element={<PublicRoute />}>
           <Route
             path="/"
