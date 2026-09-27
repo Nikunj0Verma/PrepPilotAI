@@ -361,6 +361,3 @@ Interested in:
 
 - LinkedIn: https://www.linkedin.com/in/nikunjverma000/
 - GitHub: https://github.com/Nikunj0Verma
-
-```text
-![Landing Page](./screenshots/landing-page.png)
