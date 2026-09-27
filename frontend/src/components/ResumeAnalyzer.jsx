@@ -70,7 +70,7 @@ const ResumeAnalyzer = () => {
       formData.append("resume", file);
 
       const response = await fetch(
-        "http://localhost:5000/api/resume/analyze",
+        `${import.meta.env.VITE_API_URL}/resume/analyze`,
         {
           method: "POST",
           headers: {
