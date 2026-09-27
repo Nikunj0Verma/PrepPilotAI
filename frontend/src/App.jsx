@@ -1,4 +1,5 @@
 import PublicNavbar from "./components/PublicNavbar";
+import { Analytics } from "@vercel/analytics/next"
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HeroSection from "./components/HeroSection";
