@@ -283,7 +283,7 @@ Make sure you have the following installed:
 ### Clone the Repository
 
 ```bash
-git clone [<your-repository-url>](https://github.com/Nikunj0Verma/PrepPilotAI)
+git clone https://github.com/Nikunj0Verma/PrepPilotAI
 cd PrepPilotAI
 ```
 
@@ -355,38 +355,8 @@ Interested in:
 
 ### Connect with Me
 
-- LinkedIn: ## Author
-
-**Nikunj Verma**
-
-B.Tech – Computer Science & Engineering
-
-Interested in:
-- Software Development
-- Full-Stack Development
-- Artificial Intelligence
-- Data Structures & Algorithms
-
-### Connect with Me
-
-- LinkedIn: ## Author
-
-**Nikunj Verma**
-
-B.Tech – Computer Science & Engineering
-
-Interested in:
-- Software Development
-- Full-Stack Development
-- Artificial Intelligence
-- Data Structures & Algorithms
-
-### Connect with Me
-
-- LinkedIn: [<your-linkedin-profile>](https://www.linkedin.com/in/nikunjverma000/)
-- GitHub: [<your-github-profile>](https://github.com/Nikunj0Verma)
-- GitHub: <your-github-profile>
-- GitHub: <your-github-profile>
+- LinkedIn: https://www.linkedin.com/in/nikunjverma000/
+- GitHub: https://github.com/Nikunj0Verma
 
 ```text
 ![Landing Page](./screenshots/landing-page.png)
