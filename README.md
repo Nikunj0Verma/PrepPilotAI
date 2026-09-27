@@ -178,7 +178,7 @@ Password reset tokens are securely hashed before being stored and expire after a
 
 ![Company Preparation](./screenshots/company-preparation.png)
 
-### Progrss
+### Progress
 
 ![Progress](./screenshots/progress.png)
 
